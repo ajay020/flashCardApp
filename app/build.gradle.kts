@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -61,6 +62,11 @@ dependencies {
     implementation(libs.androidx.material3)
     // navigation
     implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // room
+    implementation("androidx.room:room-runtime:2.6.1") // Or latest version
+    implementation("androidx.room:room-ktx:2.6.1") // For Kotlin extensions
+    ksp("androidx.room:room-compiler:2.6.1") // For annotation processing
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

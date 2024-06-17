@@ -38,7 +38,6 @@ import com.example.flashcard.ui.components.CategoryCreateDialog
 import com.example.flashcard.ui.navigation.FlashCardNavigation
 import com.example.flashcard.ui.navigation.FlashcardNavHost
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
@@ -76,7 +75,6 @@ fun FlashCardApp(
             coroutineScope = coroutineScope,
             sheetState = sheetState,
             hideBottomSheet = { showBottomSheet = false }
-
         )
 
         if (uiState.showCreateCategoryDialog) {
