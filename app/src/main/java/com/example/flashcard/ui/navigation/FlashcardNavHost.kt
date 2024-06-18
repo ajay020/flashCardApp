@@ -5,9 +5,9 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.example.flashcard.ui.screens.AddCardScreen
-import com.example.flashcard.ui.screens.HomeScreen
-import com.example.flashcard.ui.screens.ProfileScreen
+import com.example.flashcard.ui.card.AddCardScreen
+import com.example.flashcard.ui.home.HomeScreen
+import com.example.flashcard.ui.profile.ProfileScreen
 
 enum class FlashCardNavigation(val route: String) {
     HOME("home"),

@@ -5,10 +5,12 @@ import kotlinx.coroutines.flow.Flow
 
 interface FlashcardRepository {
     // Category
-    suspend  fun insertCategory(category: Category)
+    suspend  fun insertCategory(category: Category): Boolean
     suspend fun updateCategory(category: Category)
     suspend fun deleteCategory(category: Category)
-    suspend  fun getAllCategoriesStream(): Flow<List<Category>>
+    fun getAllCategoriesStream(): Flow<List<Category>>
+
+    fun getCategoryStream(category: Category): Flow<Category>
 
     // Flashcard
 

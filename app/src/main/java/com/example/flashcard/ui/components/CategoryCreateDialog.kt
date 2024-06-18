@@ -2,6 +2,7 @@ package com.example.flashcard.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
@@ -12,14 +13,17 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.flashcard.CategoryDetails
 
 @Composable
 fun CategoryCreateDialog(
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit,
-    onConfirm: (String) -> Unit
+    onConfirm: () -> Unit,
+    onCategoryValueChange: (CategoryDetails) -> Unit,
+    categoryDetails: CategoryDetails,
+    isDuplicateError: Boolean
 ) {
-    var text by remember { mutableStateOf("") }
 
     AlertDialog(
         modifier = modifier,
@@ -28,17 +32,25 @@ fun CategoryCreateDialog(
         text = {
             Column {
                 TextField(
-                    value = text,
-                    onValueChange = { text = it },
+                    value = categoryDetails.name,
+                    onValueChange = {
+                        onCategoryValueChange(categoryDetails.copy(name = it.trim()))
+                    },
                     label = { Text("Category Name") },
                 )
+                if (isDuplicateError) {
+                    Text(
+                        text = "Category name already exists",
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
             }
         },
         confirmButton = {
             TextButton(
+                enabled = categoryDetails.name.isNotBlank(),
                 onClick = {
-                    onConfirm(text)
-                    onDismiss()
+                    onConfirm()
                 }
             ) {
                 Text("OK")
@@ -57,7 +69,11 @@ fun CategoryCreateDialog(
 @Preview(showBackground = true)
 @Composable
 private fun CategoryCreateDialogPreview() {
-    CategoryCreateDialog(onDismiss = { /*TODO*/ }) {
-        
-    }
+    CategoryCreateDialog(
+        onDismiss = { /*TODO*/ },
+        onConfirm = { /*TODO*/ },
+        onCategoryValueChange = { /*TODO*/ },
+        categoryDetails = CategoryDetails(),
+        isDuplicateError = true
+    )
 }

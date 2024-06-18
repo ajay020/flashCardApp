@@ -37,16 +37,16 @@ import com.example.flashcard.ui.components.BottomSheet
 import com.example.flashcard.ui.components.CategoryCreateDialog
 import com.example.flashcard.ui.navigation.FlashCardNavigation
 import com.example.flashcard.ui.navigation.FlashcardNavHost
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
 fun FlashCardApp(
     modifier: Modifier = Modifier,
-    flashcardViewModel: FlashcardViewModel = viewModel()
+    viewModel: FlashcardViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val navController = rememberNavController()
-    val uiState by flashcardViewModel.uiState.collectAsState()
     val sheetState = rememberModalBottomSheetState()
     var showBottomSheet by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
@@ -69,7 +69,7 @@ fun FlashCardApp(
         )
 
         BottomSheet(
-            showCategoryDialog = { flashcardViewModel.displayCreateCategoryDialog() },
+            showCategoryDialog = { viewModel.showDialog = true },
             modifier = Modifier,
             showBottomSheet = showBottomSheet,
             coroutineScope = coroutineScope,
@@ -77,10 +77,24 @@ fun FlashCardApp(
             hideBottomSheet = { showBottomSheet = false }
         )
 
-        if (uiState.showCreateCategoryDialog) {
+        if (viewModel.showDialog) {
             CategoryCreateDialog(
-                onDismiss = { flashcardViewModel.hideCreateCategoryDialog() },
-                onConfirm = { }
+                onDismiss = {
+                    viewModel.showDialog = false
+                    viewModel.clearError()
+                },
+                onConfirm = {
+                    coroutineScope.launch {
+                        viewModel.saveCategory()
+                        if (!viewModel.flashCardUiState.isDuplicateError) {
+                            viewModel.showDialog = false
+                        }
+//                        sheetState.hide()
+                    }
+                },
+                onCategoryValueChange = viewModel::updateUiState,
+                categoryDetails = viewModel.flashCardUiState.categoryDetails,
+                isDuplicateError = viewModel.flashCardUiState.isDuplicateError
             )
         }
     }
@@ -103,7 +117,6 @@ fun FlashCardTopAppBar(modifier: Modifier = Modifier) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FlashCardBottomAppBar(
     navController: NavController,
