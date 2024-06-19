@@ -74,7 +74,7 @@ data class CategoryDetails(
 fun CategoryDetails.toCategory(): Category {
     return Category(
         id = id,
-        name = name
+        name = name.trim()
     )
 }
 

@@ -5,10 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flashcard.data.FlashcardRepository
 import com.example.flashcard.model.Category
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 /**
  * ViewModel to retrieve all categories in the Room database.
@@ -57,7 +60,7 @@ class HomeViewModel(
     }
 
     suspend fun updateCategory(category: Category){
-        flashcardRepository.updateCategory(category)
+      flashcardRepository.updateCategory(category)
     }
 
     companion object {

@@ -44,6 +44,7 @@ fun HomeScreen(
     val selectedCategory by viewModel.selectedCategory
     val coroutineScope = rememberCoroutineScope()
 
+
     HomeScreenContent(
         modifier = modifier,
         onCategoryLongPress = viewModel::onCategoryLongPress,
@@ -73,14 +74,16 @@ fun HomeScreen(
         EditCategoryDialog(
             category = selectedCategory!!,
             onConfirm = {
-                  coroutineScope.launch {
-                      viewModel.updateCategory(
-                          Category( id = selectedCategory!!.id, name = it )
-                      )
-                  }
+                coroutineScope.launch {
+                    viewModel.updateCategory(
+                        Category(id = selectedCategory!!.id, name = it.trim())
+                    )
+                }
+                    viewModel.dismissEditCategoryDialog()
+            },
+            onDismiss = {
                 viewModel.dismissEditCategoryDialog()
             },
-            onDismiss = { viewModel.dismissEditCategoryDialog() }
         )
     }
 }

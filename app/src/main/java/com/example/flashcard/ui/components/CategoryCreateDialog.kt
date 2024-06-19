@@ -34,9 +34,10 @@ fun CategoryCreateDialog(
                 TextField(
                     value = categoryDetails.name,
                     onValueChange = {
-                        onCategoryValueChange(categoryDetails.copy(name = it.trim()))
+                        onCategoryValueChange(categoryDetails.copy(name = it))
                     },
                     label = { Text("Category Name") },
+                    isError = isDuplicateError
                 )
                 if (isDuplicateError) {
                     Text(

@@ -20,8 +20,16 @@ class OfflineFlashcardRepository (
         }
     }
 
-    override suspend fun updateCategory(category: Category) {
-        categoryDao.updateCategory(category)
+    override suspend fun updateCategory(category: Category): Boolean {
+
+        return withContext(Dispatchers.IO) {
+            if (categoryDao.isCategoryNameExists(category.name)) {
+                false
+            } else {
+                categoryDao.updateCategory(category)
+                true
+            }
+        }
     }
 
     override suspend fun deleteCategory(category: Category) {
@@ -31,6 +39,9 @@ class OfflineFlashcardRepository (
     override fun getAllCategoriesStream(): Flow<List<Category>> {
         return categoryDao.getAllCategories()
     }
+
+    override  fun isCategoryNameExists(name:String) = categoryDao.isCategoryNameExists(name)
+
 
     override fun getCategoryStream(category: Category): Flow<Category> {
         return categoryDao.getCategoryStream(category.id)

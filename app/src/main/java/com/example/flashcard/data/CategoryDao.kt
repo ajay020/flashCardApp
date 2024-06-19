@@ -21,9 +21,9 @@ interface CategoryDao {
     fun getCategoryStream(id: Int): Flow<Category>
 
     @Query("SELECT EXISTS(SELECT 1 FROM categories WHERE Lower(name) =  Lower(:name))")
-    suspend fun isCategoryNameExists(name: String): Boolean
+    fun isCategoryNameExists(name: String): Boolean
 
-    @Update(onConflict = OnConflictStrategy.IGNORE )
+    @Update(onConflict = OnConflictStrategy.IGNORE)
     suspend fun updateCategory(category: Category)
 
     @Delete
