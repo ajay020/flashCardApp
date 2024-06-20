@@ -1,6 +1,8 @@
 package com.example.flashcard
 
+import AddCardViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
+import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -14,6 +16,11 @@ object AppViewModelProvider {
         }
         initializer {
             HomeViewModel(flashcardApplication().container.flashcardRepository)
+        }
+        initializer {
+            AddCardViewModel(
+                flashcardApplication().container.flashcardRepository
+            )
         }
     }
 }

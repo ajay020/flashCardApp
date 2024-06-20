@@ -5,8 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.AddCircle
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,13 +37,19 @@ import androidx.navigation.compose.rememberNavController
 import com.example.compose.FlashCardTheme
 import com.example.flashcard.ui.components.BottomSheet
 import com.example.flashcard.ui.components.CategoryCreateDialog
-import com.example.flashcard.ui.navigation.FlashCardNavigation
+import com.example.flashcard.ui.home.HomeDestination
 import com.example.flashcard.ui.navigation.FlashcardNavHost
+import com.example.flashcard.ui.navigation.NavigationDestination
+import com.example.flashcard.ui.profile.ProfileDestination
 import kotlinx.coroutines.launch
+
+object FlashCardNavigation : NavigationDestination {
+    override val route: String = "flashcard"
+    override val titleRes: Int = R.string.app_name
+}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
 fun FlashCardApp(
     modifier: Modifier = Modifier,
     viewModel: FlashcardViewModel = viewModel(factory = AppViewModelProvider.Factory)
@@ -102,7 +110,12 @@ fun FlashCardApp(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FlashCardTopAppBar(modifier: Modifier = Modifier) {
+fun FlashCardTopAppBar(
+    modifier: Modifier = Modifier,
+    canNavigateBack: Boolean = false,
+    navigateUp: () -> Unit = {},
+    title: String = stringResource(id = R.string.app_name),
+) {
     TopAppBar(
         modifier = modifier,
         colors = TopAppBarDefaults.topAppBarColors(
@@ -111,9 +124,21 @@ fun FlashCardTopAppBar(modifier: Modifier = Modifier) {
         ),
         title = {
             Text(
-                text = stringResource(id = R.string.app_name),
+                text = title,
             )
+        },
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick =  navigateUp) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "back arrow"
+                    )
+                }
+            }
         }
+
+
     )
 }
 
@@ -130,7 +155,7 @@ fun FlashCardBottomAppBar(
     ) {
         IconButton(
             modifier = Modifier.width(54.dp),
-            onClick = { navController.navigate(FlashCardNavigation.HOME.route) },
+            onClick = { navController.navigate(HomeDestination.route) },
             enabled = true
         ) {
             Icon(
@@ -145,7 +170,7 @@ fun FlashCardBottomAppBar(
             Icon(Icons.Filled.AddCircle, contentDescription = "Add")
         }
         Spacer(Modifier.weight(1f, true)) // To push actions to the right
-        IconButton(onClick = { navController.navigate(FlashCardNavigation.PROFILE.route) }) {
+        IconButton(onClick = { navController.navigate(ProfileDestination.route) }) {
             Icon(Icons.Filled.AccountCircle, contentDescription = "Account")
         }
     }

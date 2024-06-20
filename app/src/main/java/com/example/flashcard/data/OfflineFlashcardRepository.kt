@@ -1,6 +1,7 @@
 package com.example.flashcard.data
 
 import com.example.flashcard.model.Category
+import com.example.flashcard.model.Flashcard
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -47,4 +48,19 @@ class OfflineFlashcardRepository (
         return categoryDao.getCategoryStream(category.id)
     }
 
+    // ========================= Flash card =================================
+
+    override suspend fun insertFlashcard(flashcard: Flashcard) {
+        flashcardDao.insert(flashcard)
+    }
+
+    override suspend fun updateFlashcard(flashcard: Flashcard): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun deleteFlashcard(flashcard: Flashcard) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getAllFlashcardsStream(): Flow<List<Flashcard>> = flashcardDao.getAllFlashcards()
 }

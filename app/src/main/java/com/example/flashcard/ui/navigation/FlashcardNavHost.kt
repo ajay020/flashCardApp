@@ -3,17 +3,18 @@ package com.example.flashcard.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
+import androidx.navigation.navArgument
+import com.example.flashcard.ui.card.AddCardDestination
 import com.example.flashcard.ui.card.AddCardScreen
+import com.example.flashcard.ui.home.HomeDestination
 import com.example.flashcard.ui.home.HomeScreen
 import com.example.flashcard.ui.profile.ProfileScreen
 
-enum class FlashCardNavigation(val route: String) {
-    HOME("home"),
-    PROFILE("profile"),
-    ADDCARD(route = "addCard")
-}
+
 @Composable
 fun FlashcardNavHost(
     navController: NavHostController,
@@ -22,20 +23,32 @@ fun FlashcardNavHost(
 
     NavHost(
         navController = navController,
-        startDestination = FlashCardNavigation.HOME.route,
+        startDestination = HomeDestination.route,
         modifier = modifier
     ) {
-        composable(FlashCardNavigation.HOME.route) {
+        composable(
+           HomeDestination.route,
+        ) {
             HomeScreen(
-                modifier = modifier
+                navigateToAddCard = { navController.navigate( "${AddCardDestination.route}/$it" ) },
+                modifier = modifier,
+                navController = navController
             )
         }
-        composable(FlashCardNavigation.ADDCARD.route) {
+        composable(
+            route =  AddCardDestination.routeWithArgs,
+            arguments = listOf( navArgument(AddCardDestination.CategoryIdArgs){ type = NavType.IntType } )
+        ) {backStackEntry ->
+            val categoryId = backStackEntry.arguments?.getInt(AddCardDestination.CategoryIdArgs) ?: 0
+
             AddCardScreen(
+                categoryId = categoryId,
+                navigateBack = { navController.navigateUp() },
+                onNavigateUp = { navController.navigateUp() },
                 modifier = modifier
             )
         }
-        composable(FlashCardNavigation.PROFILE.route) {
+        composable(NavRoutes.Profile) {
             ProfileScreen(
                 modifier = modifier
             )

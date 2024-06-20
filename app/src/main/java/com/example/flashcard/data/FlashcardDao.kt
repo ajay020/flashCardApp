@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
 import com.example.flashcard.model.Flashcard
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface FlashcardDao {
@@ -21,5 +22,5 @@ interface FlashcardDao {
     suspend fun delete(flashcard: Flashcard)
 
     @Query("SELECT * FROM flashcards")
-    fun getAllFlashcards(): LiveData<List<Flashcard>>
+    fun getAllFlashcards(): Flow<List<Flashcard>>
 }

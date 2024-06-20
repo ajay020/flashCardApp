@@ -24,18 +24,31 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavType
 import com.example.flashcard.AppViewModelProvider
 import com.example.flashcard.FlashcardViewModel
+import com.example.flashcard.R
 import com.example.flashcard.model.Category
 import com.example.flashcard.ui.components.CategoryCreateDialog
 import com.example.flashcard.ui.components.CategoryOptionDialog
 import com.example.flashcard.ui.components.EditCategoryDialog
+import com.example.flashcard.ui.navigation.NavRoutes
+import com.example.flashcard.ui.navigation.NavigationDestination
 
 import kotlinx.coroutines.launch
 
+
+object HomeDestination: NavigationDestination {
+    override val route = "home"
+    override val titleRes = R.string.home_title
+}
+
 @Composable
 fun HomeScreen(
+    navigateToAddCard: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    navController: NavController,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val homeUiState by viewModel.homeUiState.collectAsState()
@@ -43,7 +56,6 @@ fun HomeScreen(
     val showEditCategoryDialog by viewModel.showEditCategoryDialog
     val selectedCategory by viewModel.selectedCategory
     val coroutineScope = rememberCoroutineScope()
-
 
     HomeScreenContent(
         modifier = modifier,
@@ -56,7 +68,7 @@ fun HomeScreen(
             category = selectedCategory!!,
             onDismiss = viewModel::onDialogDismiss,
             onOpen = { /* TODO: Handle Open */ },
-            onAdd = { /* TODO: Handle Add */ },
+            onAdd = { navigateToAddCard(selectedCategory!!.id)},
             onRename = {
                 viewModel.onDialogDismiss()
                 viewModel.showEditCategoryDialog()
@@ -135,7 +147,7 @@ fun CategoryList(
         items(categoryList) {
             CategoryItem(
                 category = it,
-                onLongPress = { onCategoryLongPress(it) }
+                onCategoryClick = { onCategoryLongPress(it) }
             )
         }
     }
@@ -145,7 +157,7 @@ fun CategoryList(
 @Composable
 fun CategoryItem(
     category: Category,
-    onLongPress: () -> Unit,
+    onCategoryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -153,8 +165,8 @@ fun CategoryItem(
             .fillMaxWidth()
             .padding(8.dp)
             .combinedClickable(
-                onClick = { /* Handle click if needed */ },
-                onLongClick = onLongPress
+                onClick = onCategoryClick,
+                onLongClick = {}
             )
     ) {
         Text(
@@ -172,7 +184,7 @@ private fun CategoryItemPreview() {
     val category = Category(1, "Category 1")
     CategoryItem(
         category = category,
-        onLongPress = {}
+        onCategoryClick = {}
     )
 }
 
