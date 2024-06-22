@@ -3,13 +3,10 @@ package com.example.flashcard.ui.card
 import AddCardDialog
 import AddCardViewModel
 import CardDetails
-import CardInputForm
 import CardUiState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 import androidx.compose.foundation.layout.*
@@ -21,10 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.flashcard.AppViewModelProvider
-import com.example.flashcard.FlashCardTopAppBar
+import com.example.flashcard.ui.main.FlashCardTopAppBar
 import com.example.flashcard.R
 import com.example.flashcard.model.Flashcard
 import com.example.flashcard.ui.navigation.NavigationDestination

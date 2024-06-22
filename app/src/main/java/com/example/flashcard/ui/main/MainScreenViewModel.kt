@@ -1,4 +1,3 @@
-package com.example.flashcard
 
 import android.util.Log
 import androidx.compose.runtime.getValue
@@ -12,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class FlashcardViewModel(
+class MainScreenViewModel(
     private val flashcardRepository: FlashcardRepository
 ) : ViewModel() {
     var flashCardUiState by mutableStateOf(FlashcardUiState())
