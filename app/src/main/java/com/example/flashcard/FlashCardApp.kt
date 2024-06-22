@@ -60,7 +60,6 @@ fun FlashCardApp(
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
-        topBar = { FlashCardTopAppBar() },
         bottomBar = {
             FlashCardBottomAppBar(
                 navController = navController,
@@ -113,7 +112,7 @@ fun FlashCardApp(
 fun FlashCardTopAppBar(
     modifier: Modifier = Modifier,
     canNavigateBack: Boolean = false,
-    navigateUp: () -> Unit = {},
+    onNavigateUp: () -> Unit = {},
     title: String = stringResource(id = R.string.app_name),
 ) {
     TopAppBar(
@@ -129,7 +128,7 @@ fun FlashCardTopAppBar(
         },
         navigationIcon = {
             if (canNavigateBack) {
-                IconButton(onClick =  navigateUp) {
+                IconButton(onClick =  onNavigateUp) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "back arrow"

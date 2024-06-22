@@ -63,4 +63,7 @@ class OfflineFlashcardRepository (
     }
 
     override fun getAllFlashcardsStream(): Flow<List<Flashcard>> = flashcardDao.getAllFlashcards()
+    override fun getFlashcardsByCategoryStream(categoryId: Int): Flow<List<Flashcard>> {
+      return flashcardDao.getFlashcardsByCategoryId(categoryId)
+    }
 }

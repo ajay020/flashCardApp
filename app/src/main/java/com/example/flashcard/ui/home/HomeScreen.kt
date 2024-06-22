@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -20,6 +21,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -27,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavType
 import com.example.flashcard.AppViewModelProvider
+import com.example.flashcard.FlashCardTopAppBar
 import com.example.flashcard.FlashcardViewModel
 import com.example.flashcard.R
 import com.example.flashcard.model.Category
@@ -39,10 +42,11 @@ import com.example.flashcard.ui.navigation.NavigationDestination
 import kotlinx.coroutines.launch
 
 
-object HomeDestination: NavigationDestination {
+object HomeDestination : NavigationDestination {
     override val route = "home"
     override val titleRes = R.string.home_title
 }
+
 
 @Composable
 fun HomeScreen(
@@ -57,46 +61,55 @@ fun HomeScreen(
     val selectedCategory by viewModel.selectedCategory
     val coroutineScope = rememberCoroutineScope()
 
-    HomeScreenContent(
-        modifier = modifier,
-        onCategoryLongPress = viewModel::onCategoryLongPress,
-        categoryList = homeUiState.categoryList
-    )
+    Scaffold(
+        topBar = {
+            FlashCardTopAppBar(
+                title = stringResource(HomeDestination.titleRes),
+                onNavigateUp = { navController.navigateUp() }
+            )
+        }
+    ) {
+        HomeScreenContent(
+            modifier = modifier.padding(it),
+            categoryList = homeUiState.categoryList,
+            onCategoryLongPress = viewModel::onCategoryLongPress
+        )
 
-    if (showDialog && selectedCategory != null) {
-        CategoryOptionDialog(
-            category = selectedCategory!!,
-            onDismiss = viewModel::onDialogDismiss,
-            onOpen = { /* TODO: Handle Open */ },
-            onAdd = { navigateToAddCard(selectedCategory!!.id)},
-            onRename = {
-                viewModel.onDialogDismiss()
-                viewModel.showEditCategoryDialog()
-            },
-            onDelete = {
-                coroutineScope.launch {
-                    viewModel.deleteCategory(it)
+        if (showDialog && selectedCategory != null) {
+            CategoryOptionDialog(
+                category = selectedCategory!!,
+                onDismiss = viewModel::onDialogDismiss,
+                onOpen = { /* TODO: Handle Open */ },
+                onAdd = { navigateToAddCard(selectedCategory!!.id) },
+                onRename = {
                     viewModel.onDialogDismiss()
+                    viewModel.showEditCategoryDialog()
+                },
+                onDelete = {
+                    coroutineScope.launch {
+                        viewModel.deleteCategory(it)
+                        viewModel.onDialogDismiss()
+                    }
                 }
-            }
-        )
-    }
+            )
+        }
 
-    if (showEditCategoryDialog && selectedCategory != null) {
-        EditCategoryDialog(
-            category = selectedCategory!!,
-            onConfirm = {
-                coroutineScope.launch {
-                    viewModel.updateCategory(
-                        Category(id = selectedCategory!!.id, name = it.trim())
-                    )
-                }
+        if (showEditCategoryDialog && selectedCategory != null) {
+            EditCategoryDialog(
+                category = selectedCategory!!,
+                onConfirm = {
+                    coroutineScope.launch {
+                        viewModel.updateCategory(
+                            Category(id = selectedCategory!!.id, name = it.trim())
+                        )
+                    }
                     viewModel.dismissEditCategoryDialog()
-            },
-            onDismiss = {
-                viewModel.dismissEditCategoryDialog()
-            },
-        )
+                },
+                onDismiss = {
+                    viewModel.dismissEditCategoryDialog()
+                },
+            )
+        }
     }
 }
 
@@ -110,6 +123,7 @@ fun HomeScreenContent(
         EmptyCategoryMessage(modifier = modifier)
     } else {
         CategoryList(
+            modifier = modifier,
             categoryList = categoryList,
             onCategoryLongPress = onCategoryLongPress
         )
@@ -122,7 +136,7 @@ fun EmptyCategoryMessage(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(Color.LightGray)
             .padding(16.dp)
     ) {
         Text(
@@ -132,7 +146,6 @@ fun EmptyCategoryMessage(modifier: Modifier = Modifier) {
         )
     }
 }
-
 
 @Composable
 fun CategoryList(

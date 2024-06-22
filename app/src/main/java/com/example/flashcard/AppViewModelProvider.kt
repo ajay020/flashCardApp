@@ -2,10 +2,10 @@ package com.example.flashcard
 
 import AddCardViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
-import androidx.lifecycle.createSavedStateHandle
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.flashcard.ui.card.CardListViewModel
 import com.example.flashcard.ui.home.HomeViewModel
 
 object AppViewModelProvider {
@@ -21,6 +21,9 @@ object AppViewModelProvider {
             AddCardViewModel(
                 flashcardApplication().container.flashcardRepository
             )
+        }
+        initializer {
+            CardListViewModel(flashcardApplication().container.flashcardRepository)
         }
     }
 }

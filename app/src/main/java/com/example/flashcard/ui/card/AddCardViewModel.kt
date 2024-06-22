@@ -2,12 +2,9 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.flashcard.data.FlashcardRepository
 import com.example.flashcard.model.Flashcard
-import kotlinx.coroutines.launch
 
 class AddCardViewModel(
     private val flashcardRepository: FlashcardRepository,
@@ -25,7 +22,12 @@ class AddCardViewModel(
         if (validateEntry()) {
             cardUiState = cardUiState.copy(cardDetails = cardUiState.cardDetails.copy(categoryId = categoryId))
             flashcardRepository.insertFlashcard(cardUiState.cardDetails.toCard())
+            resetUiState()
         }
+    }
+
+    fun resetUiState() {
+        cardUiState = CardUiState()
     }
 
     private fun validateEntry(cardDetails: CardDetails = cardUiState.cardDetails): Boolean {
