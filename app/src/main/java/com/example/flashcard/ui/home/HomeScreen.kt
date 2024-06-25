@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.flashcard.AppViewModelProvider
-import com.example.flashcard.ui.main.FlashCardTopAppBar
+import com.example.flashcard.ui.main.MainTopBar
 import com.example.flashcard.R
 import com.example.flashcard.model.Category
 import com.example.flashcard.ui.components.CategoryOptionDialog
@@ -51,14 +52,14 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val homeUiState by viewModel.homeUiState.collectAsState()
-    val showDialog by viewModel.showDialog
+    var showDialog by viewModel.showDialog
     val showEditCategoryDialog by viewModel.showEditCategoryDialog
     val selectedCategory by viewModel.selectedCategory
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
-            FlashCardTopAppBar(
+            MainTopBar(
                 title = stringResource(HomeDestination.titleRes),
                 onNavigateUp = { navController.navigateUp() }
             )
@@ -75,7 +76,10 @@ fun HomeScreen(
                 category = selectedCategory!!,
                 onDismiss = viewModel::onDialogDismiss,
                 onOpen = { /* TODO: Handle Open */ },
-                onAdd = { navigateToAddCard(selectedCategory!!.id) },
+                onAdd = {
+                    navigateToAddCard(selectedCategory!!.id)
+                    showDialog = false
+                },
                 onRename = {
                     viewModel.onDialogDismiss()
                     viewModel.showEditCategoryDialog()

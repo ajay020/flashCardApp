@@ -3,4 +3,6 @@
     <string name="profile">Profile</string>
     <string name="add_card">Add card</string>
     <string name="home_title">Home</string>
+    <string name="flashcard">Flashcard</string>
+    <string name="flashcard_result">Flashcare result</string>
 </resources>

@@ -68,6 +68,8 @@ dependencies {
     implementation("androidx.room:room-ktx:2.6.1") // For Kotlin extensions
     ksp("androidx.room:room-compiler:2.6.1") // For annotation processing
 
+
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

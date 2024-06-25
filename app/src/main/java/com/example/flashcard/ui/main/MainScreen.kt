@@ -1,6 +1,7 @@
 package com.example.flashcard.ui.main
 
 import MainScreenViewModel
+import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -32,12 +33,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.compose.FlashCardTheme
 import com.example.flashcard.AppViewModelProvider
 import com.example.flashcard.R
 import com.example.flashcard.ui.components.BottomSheet
 import com.example.flashcard.ui.components.CategoryCreateDialog
+import com.example.flashcard.ui.flashcard.FlashcardDestination
 import com.example.flashcard.ui.home.HomeDestination
 import com.example.flashcard.ui.navigation.FlashcardNavHost
 import com.example.flashcard.ui.navigation.NavigationDestination
@@ -60,13 +63,21 @@ fun MainScreen(
     var showBottomSheet by remember { mutableStateOf(false) }
     val coroutineScope = rememberCoroutineScope()
 
+    // Get the current backstack entry to determine the current route
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
     Scaffold(
         bottomBar = {
-            FlashCardBottomAppBar(
-                navController = navController,
-                modifier = modifier,
-                onAddClick = { showBottomSheet = true }
-            )
+            Log.d("MainScreen", "currentRoute: $currentRoute")
+            if (currentRoute != "learn" && currentRoute?.startsWith(FlashcardDestination.route) == false ){
+                FlashCardBottomAppBar(
+                    navController = navController,
+                    modifier = modifier,
+                    onAddClick = { showBottomSheet = true }
+                )
+            }
+
         },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
@@ -97,7 +108,6 @@ fun MainScreen(
                         if (!viewModel.flashCardUiState.isDuplicateError) {
                             viewModel.showDialog = false
                         }
-//                        sheetState.hide()
                     }
                 },
                 onCategoryValueChange = viewModel::updateUiState,
@@ -110,7 +120,7 @@ fun MainScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FlashCardTopAppBar(
+fun MainTopBar(
     modifier: Modifier = Modifier,
     canNavigateBack: Boolean = false,
     onNavigateUp: () -> Unit = {},
@@ -129,7 +139,7 @@ fun FlashCardTopAppBar(
         },
         navigationIcon = {
             if (canNavigateBack) {
-                IconButton(onClick =  onNavigateUp) {
+                IconButton(onClick = onNavigateUp) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "back arrow"
@@ -137,8 +147,6 @@ fun FlashCardTopAppBar(
                 }
             }
         }
-
-
     )
 }
 

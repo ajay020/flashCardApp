@@ -25,6 +25,7 @@ fun CardListHeader(
     onTestClick: () -> Unit,
     onMatchClick: () -> Unit,
     onAddCardClick: () -> Unit,
+    onFlashcardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -35,6 +36,13 @@ fun CardListHeader(
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Button(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(4.dp),
+            onClick = onFlashcardClick
+        ) {
+            Text("Flashcards")
+        }
         Button(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(4.dp),
@@ -76,6 +84,7 @@ private fun CardListHeaderPreview() {
         onLearnClick = {},
         onTestClick = {},
         onMatchClick = {},
-        onAddCardClick = {}
+        onAddCardClick = {},
+        onFlashcardClick = {}
     )
 }

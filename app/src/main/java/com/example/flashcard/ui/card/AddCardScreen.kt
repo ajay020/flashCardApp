@@ -20,7 +20,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.flashcard.AppViewModelProvider
-import com.example.flashcard.ui.main.FlashCardTopAppBar
+import com.example.flashcard.ui.main.MainTopBar
 import com.example.flashcard.R
 import com.example.flashcard.model.Flashcard
 import com.example.flashcard.ui.navigation.NavigationDestination
@@ -36,6 +36,8 @@ object AddCardDestination : NavigationDestination {
 @Composable
 fun AddCardScreen(
     categoryId: Int,
+    navigateToLearn: () -> Unit,
+    navigateToFlashcard: (Int ) -> Unit,
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
@@ -53,9 +55,9 @@ fun AddCardScreen(
         modifier = Modifier
             .background(Color.Red),
         topBar = {
-            FlashCardTopAppBar(
+            MainTopBar(
                 title = stringResource(id = AddCardDestination.titleRes),
-                canNavigateBack = true,
+                canNavigateBack = false,
                 onNavigateUp = onNavigateUp
             )
         },
@@ -74,9 +76,10 @@ fun AddCardScreen(
                     viewModel.saveCard(categoryId)
                 }
             },
-            onLearnClick = { /* Handle Learn click */ },
+            onLearnClick = { navigateToLearn() },
             onTestClick = { /* Handle Test click */ },
-            onMatchClick = { /* Handle Match click */ }
+            onMatchClick = { /* Handle Match click */ },
+            onFlashcardClick = { navigateToFlashcard(categoryId) }
         )
     }
 }
@@ -90,9 +93,9 @@ fun AddCardContent(
     onSavedClick: () -> Unit,
     onLearnClick: () -> Unit,
     onTestClick: () -> Unit,
-    onMatchClick: () -> Unit
+    onMatchClick: () -> Unit,
+    onFlashcardClick: () -> Unit,
 ) {
-
     var showDialog by remember { mutableStateOf(false) }
 
     LazyColumn(
@@ -101,12 +104,12 @@ fun AddCardContent(
     ) {
         // Card list header
         item {
-
             CardListHeader(
-                onLearnClick = { /*TODO*/ },
+                onLearnClick = onLearnClick,
                 onTestClick = { /*TODO*/ },
                 onMatchClick = { /*TODO*/ },
-                onAddCardClick = { showDialog = true}
+                onAddCardClick = { showDialog = true},
+                onFlashcardClick = onFlashcardClick
             )
         }
         // card list items
@@ -158,7 +161,8 @@ private fun AddCardContentPreview() {
         flashCardsList = flashcards,
         onLearnClick = { /* Handle Learn click */ },
         onTestClick = { /* Handle Test click */ },
-        onMatchClick = { /* Handle Match click */ }
+        onMatchClick = { /* Handle Match click */ },
+        onFlashcardClick = { /* Handle Flashcard click */ }
     )
 }
 
