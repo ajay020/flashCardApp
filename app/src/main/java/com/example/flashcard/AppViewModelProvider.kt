@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.flashcard.ui.card.CardListViewModel
 import com.example.flashcard.ui.flashcard.FlashcardViewModel
 import com.example.flashcard.ui.home.HomeViewModel
+import com.example.flashcard.ui.mcq.MCQViewModel
 import com.example.flashcard.ui.navigation.FlashcardNavHost
 
 object AppViewModelProvider {
@@ -32,6 +33,9 @@ object AppViewModelProvider {
 
         initializer {
             FlashcardViewModel(flashcardApplication().container.flashcardRepository)
+        }
+        initializer {
+            MCQViewModel(flashcardApplication().container.flashcardRepository)
         }
     }
 }

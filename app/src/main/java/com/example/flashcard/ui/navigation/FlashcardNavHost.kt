@@ -7,7 +7,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.example.flashcard.AppViewModelProvider
 import com.example.flashcard.ui.card.AddCardDestination
@@ -20,6 +19,11 @@ import com.example.flashcard.ui.flashcard.FlashcardViewModel
 import com.example.flashcard.ui.home.HomeDestination
 import com.example.flashcard.ui.home.HomeScreen
 import com.example.flashcard.ui.learn.LearnScreen
+import com.example.flashcard.ui.mcq.MCQViewModel
+import com.example.flashcard.ui.mcq.MCQDestination
+import com.example.flashcard.ui.mcq.MCQResultDestination
+import com.example.flashcard.ui.mcq.MCQResultScreen
+import com.example.flashcard.ui.mcq.MultipleChoiceQuestionScreen
 import com.example.flashcard.ui.profile.ProfileDestination
 import com.example.flashcard.ui.profile.ProfileScreen
 
@@ -27,7 +31,8 @@ import com.example.flashcard.ui.profile.ProfileScreen
 fun FlashcardNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
-    flashcardViewmodel: FlashcardViewModel = viewModel(factory = AppViewModelProvider.Factory)
+    flashcardViewmodel: FlashcardViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    mcqViewmodel: MCQViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     NavHost(
         navController = navController,
@@ -56,7 +61,7 @@ fun FlashcardNavHost(
                 categoryId = categoryId,
                 navigateBack = { navController.navigateUp() },
                 onNavigateUp = { navController.navigateUp() },
-                navigateToLearn = { navController.navigate("learn") },
+                navigateToMCQ = { navController.navigate("${MCQDestination.route}/$it") },
                 navigateToFlashcard = { navController.navigate("${FlashcardDestination.route}/$it") },
                 modifier = modifier
             )
@@ -90,15 +95,46 @@ fun FlashcardNavHost(
             )
         }
 
-        composable("learn") {
-            LearnScreen(modifier = modifier)
-        }
-
         composable(FlashcardResultDestination.route) {
             FlashcardResultScreen(
                 viewModel = flashcardViewmodel,
                 onNavigateUp = {
-//                    navController.navigateUp()
+                    navController.popBackStack(
+                        AddCardDestination.routeWithArgs,
+                        inclusive = false
+                    )
+                },
+                onBackPressed = {
+                    navController.popBackStack(
+                        AddCardDestination.routeWithArgs,
+                        inclusive = false
+                    )
+                }
+            )
+        }
+
+        composable(
+            MCQDestination.routeWithArgs,
+            arguments = listOf(navArgument(MCQDestination.CategoryIdArgs) {
+                type = NavType.IntType
+            })
+        ) { backStackEntry ->
+            val categoryId =
+                backStackEntry.arguments?.getInt(MCQDestination.CategoryIdArgs)
+                    ?: 0
+
+            MultipleChoiceQuestionScreen(
+                categoryId = categoryId,
+                viewModel = mcqViewmodel,
+                onNavigateUp = { navController.popBackStack() },
+                onNavigateToResultScreen = { navController.navigate(MCQResultDestination.route) }
+            )
+        }
+
+        composable(MCQResultDestination.route) {
+            MCQResultScreen(
+                viewModel = mcqViewmodel,
+                onNavigateUp = {
                     navController.popBackStack(
                         AddCardDestination.routeWithArgs,
                         inclusive = false

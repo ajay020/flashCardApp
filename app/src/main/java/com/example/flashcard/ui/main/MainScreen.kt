@@ -42,6 +42,8 @@ import com.example.flashcard.ui.components.BottomSheet
 import com.example.flashcard.ui.components.CategoryCreateDialog
 import com.example.flashcard.ui.flashcard.FlashcardDestination
 import com.example.flashcard.ui.home.HomeDestination
+import com.example.flashcard.ui.mcq.MCQDestination
+import com.example.flashcard.ui.mcq.MCQResultDestination
 import com.example.flashcard.ui.navigation.FlashcardNavHost
 import com.example.flashcard.ui.navigation.NavigationDestination
 import com.example.flashcard.ui.profile.ProfileDestination
@@ -69,8 +71,12 @@ fun MainScreen(
 
     Scaffold(
         bottomBar = {
-            Log.d("MainScreen", "currentRoute: $currentRoute")
-            if (currentRoute != "learn" && currentRoute?.startsWith(FlashcardDestination.route) == false ){
+            if (currentRoute?.startsWith(MCQDestination.route) == false
+                && currentRoute != MCQResultDestination.route
+                && !currentRoute.startsWith(
+                    FlashcardDestination.route
+                )
+            ) {
                 FlashCardBottomAppBar(
                     navController = navController,
                     modifier = modifier,

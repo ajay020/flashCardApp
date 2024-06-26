@@ -64,16 +64,16 @@ fun FlashcardScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(categoryId) {
-        Log.d("FlashcardScreen", "LaunchedEffect triggered with categoryId: $categoryId")
+//        Log.d("FlashcardScreen", "LaunchedEffect triggered with categoryId: $categoryId")
         viewModel.getFlashcardsByCategory(categoryId)
     }
 
     LaunchedEffect(uiState.canNavigateToResultScreen){
         if (uiState.canNavigateToResultScreen) {
-            Log.d(
-                "FlashcardScreen",
-                "Navigating to result screen: currentIndex=${uiState.currentIndex}"
-            )
+//            Log.d(
+//                "FlashcardScreen",
+//                "Navigating to result screen: currentIndex=${uiState.currentIndex}"
+//            )
             onNavigateToFlashcardResultScreen()
         }
     }
@@ -131,7 +131,7 @@ fun FlashcardScreenContent(
     onIncorrectAnswer: () -> Unit
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .background(Color.Gray)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,

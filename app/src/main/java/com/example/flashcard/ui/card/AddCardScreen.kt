@@ -36,8 +36,8 @@ object AddCardDestination : NavigationDestination {
 @Composable
 fun AddCardScreen(
     categoryId: Int,
-    navigateToLearn: () -> Unit,
-    navigateToFlashcard: (Int ) -> Unit,
+    navigateToMCQ: (Int) -> Unit,
+    navigateToFlashcard: (Int) -> Unit,
     navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
     modifier: Modifier = Modifier,
@@ -76,7 +76,7 @@ fun AddCardScreen(
                     viewModel.saveCard(categoryId)
                 }
             },
-            onLearnClick = { navigateToLearn() },
+            onMCQClick = { navigateToMCQ(categoryId) },
             onTestClick = { /* Handle Test click */ },
             onMatchClick = { /* Handle Match click */ },
             onFlashcardClick = { navigateToFlashcard(categoryId) }
@@ -91,7 +91,7 @@ fun AddCardContent(
     onCardValueChange: (CardDetails) -> Unit,
     uiState: CardUiState,
     onSavedClick: () -> Unit,
-    onLearnClick: () -> Unit,
+    onMCQClick: () -> Unit,
     onTestClick: () -> Unit,
     onMatchClick: () -> Unit,
     onFlashcardClick: () -> Unit,
@@ -105,10 +105,10 @@ fun AddCardContent(
         // Card list header
         item {
             CardListHeader(
-                onLearnClick = onLearnClick,
+                onMCQClick = onMCQClick,
                 onTestClick = { /*TODO*/ },
                 onMatchClick = { /*TODO*/ },
-                onAddCardClick = { showDialog = true},
+                onAddCardClick = { showDialog = true },
                 onFlashcardClick = onFlashcardClick
             )
         }
@@ -159,10 +159,10 @@ private fun AddCardContentPreview() {
         uiState = CardUiState(),
         onSavedClick = {},
         flashCardsList = flashcards,
-        onLearnClick = { /* Handle Learn click */ },
         onTestClick = { /* Handle Test click */ },
         onMatchClick = { /* Handle Match click */ },
-        onFlashcardClick = { /* Handle Flashcard click */ }
+        onFlashcardClick = { /* Handle Flashcard click */ },
+        onMCQClick = { /* Handle MCQ click */ }
     )
 }
 
