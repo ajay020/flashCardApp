@@ -2,6 +2,7 @@ package com.example.flashcard.ui.flashcard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
@@ -37,6 +38,7 @@ fun FlashcardTopBar(
 ) {
 
     TopAppBar(
+        modifier = modifier.height(56.dp),
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,
             titleContentColor = Color.Blue
@@ -48,14 +50,14 @@ fun FlashcardTopBar(
         title = {
             Text(
                 text = title,
-                fontSize = 24.sp
+                fontSize = 20.sp
             )
         },
         navigationIcon = {
             if (canClose) {
                 IconButton(onClick = onClose) {
                     Icon(
-                        modifier = Modifier.size(44.dp),
+                        modifier = Modifier.size(32.dp),
                         imageVector = Icons.Filled.Close,
                         contentDescription = "close"
                     )

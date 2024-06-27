@@ -73,7 +73,7 @@ fun MCQResultScreen(
         ResultScreenContent(
             modifier = Modifier.padding(
                 start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
-//                top = paddingValues.calculateTopPadding(),
+                top = paddingValues.calculateTopPadding(),
                 end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
             ),
             correctAnswers = uiState.correctAnswers,

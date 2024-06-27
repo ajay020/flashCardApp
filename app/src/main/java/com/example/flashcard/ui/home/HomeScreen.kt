@@ -1,26 +1,33 @@
 package com.example.flashcard.ui.home
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,18 +38,16 @@ import com.example.flashcard.AppViewModelProvider
 import com.example.flashcard.ui.main.MainTopBar
 import com.example.flashcard.R
 import com.example.flashcard.model.Category
-import com.example.flashcard.ui.components.CategoryOptionDialog
+import com.example.flashcard.ui.components.ConfirmDeleteDialog
 import com.example.flashcard.ui.components.EditCategoryDialog
 import com.example.flashcard.ui.navigation.NavigationDestination
 
 import kotlinx.coroutines.launch
 
-
 object HomeDestination : NavigationDestination {
     override val route = "home"
     override val titleRes = R.string.home_title
 }
-
 
 @Composable
 fun HomeScreen(
@@ -52,14 +57,12 @@ fun HomeScreen(
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val homeUiState by viewModel.homeUiState.collectAsState()
-    var showDialog by viewModel.showDialog
-    val showEditCategoryDialog by viewModel.showEditCategoryDialog
-    val selectedCategory by viewModel.selectedCategory
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
             MainTopBar(
+                showTitle = true,
                 title = stringResource(HomeDestination.titleRes),
                 onNavigateUp = { navController.navigateUp() }
             )
@@ -68,54 +71,29 @@ fun HomeScreen(
         HomeScreenContent(
             modifier = modifier.padding(it),
             categoryList = homeUiState.categoryList,
-            onCategoryLongPress = viewModel::onCategoryLongPress
-        )
-
-        if (showDialog && selectedCategory != null) {
-            CategoryOptionDialog(
-                category = selectedCategory!!,
-                onDismiss = viewModel::onDialogDismiss,
-                onOpen = { /* TODO: Handle Open */ },
-                onAdd = {
-                    navigateToAddCard(selectedCategory!!.id)
-                    showDialog = false
-                },
-                onRename = {
-                    viewModel.onDialogDismiss()
-                    viewModel.showEditCategoryDialog()
-                },
-                onDelete = {
-                    coroutineScope.launch {
-                        viewModel.deleteCategory(it)
-                        viewModel.onDialogDismiss()
-                    }
+            onCategoryClick = {
+                navigateToAddCard(it.id)
+            },
+            onDeleteCategory = {
+                coroutineScope.launch {
+                    viewModel.deleteCategory(it)
                 }
-            )
-        }
-
-        if (showEditCategoryDialog && selectedCategory != null) {
-            EditCategoryDialog(
-                category = selectedCategory!!,
-                onConfirm = {
-                    coroutineScope.launch {
-                        viewModel.updateCategory(
-                            Category(id = selectedCategory!!.id, name = it.trim())
-                        )
-                    }
-                    viewModel.dismissEditCategoryDialog()
-                },
-                onDismiss = {
-                    viewModel.dismissEditCategoryDialog()
-                },
-            )
-        }
+            },
+            onEditCategory = {
+                coroutineScope.launch {
+                    viewModel.updateCategory(it)
+                }
+            }
+        )
     }
 }
 
 @Composable
 fun HomeScreenContent(
     categoryList: List<Category>,
-    onCategoryLongPress: (Category) -> Unit,
+    onCategoryClick: (Category) -> Unit,
+    onDeleteCategory: (Category) -> Unit,
+    onEditCategory: (Category) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (categoryList.isEmpty()) {
@@ -124,7 +102,9 @@ fun HomeScreenContent(
         CategoryList(
             modifier = modifier,
             categoryList = categoryList,
-            onCategoryLongPress = onCategoryLongPress
+            onCategoryClick = onCategoryClick,
+            onDelete = onDeleteCategory,
+            onEdit = onEditCategory
         )
     }
 }
@@ -135,7 +115,6 @@ fun EmptyCategoryMessage(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxSize()
-            .background(Color.LightGray)
             .padding(16.dp)
     ) {
         Text(
@@ -149,7 +128,9 @@ fun EmptyCategoryMessage(modifier: Modifier = Modifier) {
 @Composable
 fun CategoryList(
     categoryList: List<Category>,
-    onCategoryLongPress: (Category) -> Unit,
+    onCategoryClick: (Category) -> Unit,
+    onDelete: (Category) -> Unit,
+    onEdit: (Category) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -157,45 +138,110 @@ fun CategoryList(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(categoryList) {
-            CategoryItem(
+            CategoryListItem(
                 category = it,
-                onCategoryClick = { onCategoryLongPress(it) }
+                onEdit = onEdit,
+                onCategoryClick = { onCategoryClick(it) },
+                onDelete = onDelete
             )
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+
 @Composable
-fun CategoryItem(
+fun CategoryListItem(
     category: Category,
+    onEdit: (Category) -> Unit,
     onCategoryClick: () -> Unit,
-    modifier: Modifier = Modifier
+    onDelete: (Category) -> Unit,
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .combinedClickable(
-                onClick = onCategoryClick,
-                onLongClick = {}
-            )
-    ) {
-        Text(
-            text = category.name,
-            modifier = Modifier
-                .padding(8.dp)
-                .align(Alignment.CenterHorizontally)
+
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
+    var showEditDialog by remember {
+        mutableStateOf(false)
+    }
+
+    if (showEditDialog) {
+        EditCategoryDialog(
+            category = category,
+            onConfirm = {
+                onEdit(it)
+                showEditDialog = false
+            },
+            onDismiss = {
+                showEditDialog = false
+            },
         )
     }
+
+    if (showDialog) {
+        ConfirmDeleteDialog(
+            category = category,
+            onConfirm = {
+                showDialog = false
+                onDelete(category)
+            },
+            onDismiss = { showDialog = false }
+        )
+    }
+
+    Card(
+        modifier = Modifier
+            .clickable { onCategoryClick() }
+            .fillMaxWidth()
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(8.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .clickable { onCategoryClick() }
+                .fillMaxWidth()
+                .padding(12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = category.name,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.weight(1f)
+            )
+            IconButton(onClick = { showEditDialog = true }) {
+                Icon(
+                    imageVector = Icons.Default.Edit,
+                    contentDescription = "Edit",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+            }
+            IconButton(
+                onClick = {
+                    showDialog = true
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = "Delete",
+                    tint = MaterialTheme.colorScheme.error
+                )
+            }
+        }
+    }
 }
+
 
 @Preview(showBackground = true)
 @Composable
 private fun CategoryItemPreview() {
     val category = Category(1, "Category 1")
-    CategoryItem(
+
+    CategoryListItem(
         category = category,
+        onEdit = {},
+        onDelete = {},
         onCategoryClick = {}
     )
 }
@@ -210,6 +256,8 @@ private fun CategoryListPreview() {
     )
     CategoryList(
         categoryList = categoryList,
-        onCategoryLongPress = {}
+        onCategoryClick = {},
+        onDelete = {},
+        onEdit = {}
     )
 }

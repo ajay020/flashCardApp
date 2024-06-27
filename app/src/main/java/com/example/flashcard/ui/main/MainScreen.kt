@@ -38,6 +38,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.compose.FlashCardTheme
 import com.example.flashcard.AppViewModelProvider
 import com.example.flashcard.R
+import com.example.flashcard.ui.card.AddCardDestination
 import com.example.flashcard.ui.components.BottomSheet
 import com.example.flashcard.ui.components.CategoryCreateDialog
 import com.example.flashcard.ui.flashcard.FlashcardDestination
@@ -72,6 +73,7 @@ fun MainScreen(
     Scaffold(
         bottomBar = {
             if (currentRoute?.startsWith(MCQDestination.route) == false
+                && currentRoute != AddCardDestination.routeWithArgs
                 && currentRoute != MCQResultDestination.route
                 && !currentRoute.startsWith(
                     FlashcardDestination.route
@@ -130,6 +132,7 @@ fun MainTopBar(
     modifier: Modifier = Modifier,
     canNavigateBack: Boolean = false,
     onNavigateUp: () -> Unit = {},
+    showTitle: Boolean = false,
     title: String = stringResource(id = R.string.app_name),
 ) {
     TopAppBar(
@@ -139,9 +142,11 @@ fun MainTopBar(
             titleContentColor = MaterialTheme.colorScheme.onPrimary
         ),
         title = {
-            Text(
-                text = title,
-            )
+            if (showTitle){
+                Text(
+                    text = title,
+                )
+            }
         },
         navigationIcon = {
             if (canNavigateBack) {

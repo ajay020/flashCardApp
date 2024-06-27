@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 @Composable
 fun CardListHeader(
     onMCQClick: () -> Unit,
-    onTestClick: () -> Unit,
     onMatchClick: () -> Unit,
     onAddCardClick: () -> Unit,
     onFlashcardClick: () -> Unit,
@@ -53,13 +52,6 @@ fun CardListHeader(
         Button(
             modifier = Modifier.fillMaxWidth(),
             shape = RoundedCornerShape(4.dp),
-            onClick = onTestClick
-        ) {
-            Text("Test")
-        }
-        Button(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(4.dp),
             onClick = onMatchClick
         ) {
             Text("Match")
@@ -82,7 +74,6 @@ fun CardListHeader(
 private fun CardListHeaderPreview() {
     CardListHeader(
         onMCQClick = {},
-        onTestClick = {},
         onMatchClick = {},
         onAddCardClick = {},
         onFlashcardClick = {}

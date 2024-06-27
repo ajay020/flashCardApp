@@ -21,7 +21,7 @@ import java.lang.Error
 @Composable
 fun EditCategoryDialog(
     category: Category,
-    onConfirm: (String) -> Unit,
+    onConfirm: (Category) -> Unit,
     onDismiss: () -> Unit,
 ) {
     var newName by remember { mutableStateOf(category.name) }
@@ -33,13 +33,13 @@ fun EditCategoryDialog(
             Column {
                 OutlinedTextField(
                     value = newName,
-                    onValueChange = {newName = it},
+                    onValueChange = { newName = it },
                     label = { Text("New Category Name") },
                 )
             }
         },
         confirmButton = {
-            TextButton(onClick = { onConfirm(newName) }) {
+            TextButton(onClick = { onConfirm(Category(name = newName, id = category.id)) }) {
                 Text("Rename")
             }
         },

@@ -1,5 +1,6 @@
 package com.example.flashcard.ui.home
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -33,33 +34,12 @@ class HomeViewModel(
                 initialValue = HomeUiState()
             )
 
-    // State for showing and hiding the dialog
-    var showDialog = mutableStateOf(false)
-    var selectedCategory = mutableStateOf<Category?>(null)
-    var showEditCategoryDialog = mutableStateOf(false)
-
-    fun onCategoryLongPress(category: Category) {
-        selectedCategory.value = category
-        showDialog.value = true
-    }
-
-    fun showEditCategoryDialog(){
-        showEditCategoryDialog.value = true
-    }
-
-    fun dismissEditCategoryDialog(){
-        showEditCategoryDialog.value =false
-    }
-
-    fun onDialogDismiss() {
-        showDialog.value = false
-    }
-
     suspend fun deleteCategory(category: Category){
         flashcardRepository.deleteCategory(category)
     }
 
     suspend fun updateCategory(category: Category){
+        Log.d("HomeViewModel", "Updating category: $category")
       flashcardRepository.updateCategory(category)
     }
 

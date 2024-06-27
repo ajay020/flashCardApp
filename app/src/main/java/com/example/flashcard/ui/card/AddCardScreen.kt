@@ -57,7 +57,8 @@ fun AddCardScreen(
         topBar = {
             MainTopBar(
                 title = stringResource(id = AddCardDestination.titleRes),
-                canNavigateBack = false,
+                canNavigateBack = true,
+                showTitle = false,
                 onNavigateUp = onNavigateUp
             )
         },
@@ -77,7 +78,6 @@ fun AddCardScreen(
                 }
             },
             onMCQClick = { navigateToMCQ(categoryId) },
-            onTestClick = { /* Handle Test click */ },
             onMatchClick = { /* Handle Match click */ },
             onFlashcardClick = { navigateToFlashcard(categoryId) }
         )
@@ -92,7 +92,6 @@ fun AddCardContent(
     uiState: CardUiState,
     onSavedClick: () -> Unit,
     onMCQClick: () -> Unit,
-    onTestClick: () -> Unit,
     onMatchClick: () -> Unit,
     onFlashcardClick: () -> Unit,
 ) {
@@ -106,7 +105,6 @@ fun AddCardContent(
         item {
             CardListHeader(
                 onMCQClick = onMCQClick,
-                onTestClick = { /*TODO*/ },
                 onMatchClick = { /*TODO*/ },
                 onAddCardClick = { showDialog = true },
                 onFlashcardClick = onFlashcardClick
@@ -159,7 +157,6 @@ private fun AddCardContentPreview() {
         uiState = CardUiState(),
         onSavedClick = {},
         flashCardsList = flashcards,
-        onTestClick = { /* Handle Test click */ },
         onMatchClick = { /* Handle Match click */ },
         onFlashcardClick = { /* Handle Flashcard click */ },
         onMCQClick = { /* Handle MCQ click */ }
