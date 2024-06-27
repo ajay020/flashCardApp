@@ -2,6 +2,7 @@ package com.example.flashcard.ui.flashcard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -32,15 +33,18 @@ fun FlashcardTopBar(
     modifier: Modifier = Modifier,
     canClose: Boolean = false,
     onClose: () -> Unit = {},
-    title: String = stringResource(id = R.string.app_name),
+    title: String = "",
 ) {
 
     TopAppBar(
-        modifier = modifier,
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,
             titleContentColor = Color.Blue
         ),
+//        modifier = Modifier
+//            .border(2.dp, Color.Red, RectangleShape)
+//            .padding(4.dp)
+//            .background(Color.Green),
         title = {
             Text(
                 text = title,

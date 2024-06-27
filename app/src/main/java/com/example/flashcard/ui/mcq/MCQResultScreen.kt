@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,11 +26,15 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.flashcard.AppViewModelProvider
 import com.example.flashcard.R
+import com.example.flashcard.data.FlashcardRepository
 import com.example.flashcard.ui.flashcard.FlashcardTopBar
 import com.example.flashcard.ui.flashcard.FlashcardViewModel
 import com.example.flashcard.ui.main.MainTopBar
@@ -63,9 +69,13 @@ fun MCQResultScreen(
                 canClose = true
             )
         }
-    ) {
+    ) { paddingValues ->
         ResultScreenContent(
-            modifier = modifier.padding(it),
+            modifier = Modifier.padding(
+                start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
+//                top = paddingValues.calculateTopPadding(),
+                end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
+            ),
             correctAnswers = uiState.correctAnswers,
             incorrectAnswers = uiState.incorrectAnswers,
             questionReviews = uiState.questionReviews
@@ -97,6 +107,7 @@ fun ResultScreenContent(
         Spacer(modifier = Modifier.height(8.dp))
         LazyColumn(
             horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp),
             modifier = Modifier
                 .fillMaxSize()
@@ -157,7 +168,7 @@ fun DonutChart(
         )
 
         Text(
-            text = "${ percentage.toInt().toString()}%",
+            text = "${percentage.toInt().toString()}%",
             fontSize = 28.sp,
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground
@@ -170,30 +181,30 @@ fun DonutChart(
 fun QuestionReviewItem(question: QuestionReview) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
+            .fillMaxWidth()
             .border(1.dp, MaterialTheme.colorScheme.onBackground)
+            .padding(16.dp)
     ) {
         Text(
             text = "Question: ${question.question}",
             style = MaterialTheme.typography.bodyMedium,
             color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(bottom = 4.dp)
+            modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
             text = "Your Answer: ${question.userAnswer}",
             style = MaterialTheme.typography.bodyMedium,
             color = if (question.isCorrect) Color.Green else Color.Red,
-            modifier = Modifier.padding(bottom = 4.dp)
+            modifier = Modifier.padding(bottom = 8.dp)
         )
         Text(
             text = "Correct Answer: ${question.correctAnswer}",
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(bottom = 8.dp)
+            color = MaterialTheme.colorScheme.onBackground
         )
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable

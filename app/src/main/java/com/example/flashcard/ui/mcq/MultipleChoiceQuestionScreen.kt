@@ -56,6 +56,12 @@ fun MultipleChoiceQuestionScreen(
         viewModel.getMultipleChoiceQuestions(categoryId)
     }
 
+    LaunchedEffect(uiState.showResult) {
+        if (uiState.showResult) {
+            onNavigateToResultScreen()
+        }
+    }
+
     Scaffold(
         topBar = {
             FlashcardTopBar(
@@ -64,20 +70,17 @@ fun MultipleChoiceQuestionScreen(
             )
         }
     ) { paddingValues ->
-        if (uiState.showResult) {
-            onNavigateToResultScreen()
-        } else {
-            MCQContent(
-                modifier = Modifier.padding(paddingValues),
-                uiState = uiState,
-                onAnswerSelected = { option ->
-                    viewModel.onAnswerSelected(option)
-                },
-                onNextQuestion = {
-                    viewModel.onNextQuestion()
-                }
-            )
-        }
+
+        MCQContent(
+            modifier = Modifier.padding(paddingValues),
+            uiState = uiState,
+            onAnswerSelected = { option ->
+                viewModel.onAnswerSelected(option)
+            },
+            onNextQuestion = {
+                viewModel.onNextQuestion()
+            }
+        )
     }
 }
 
