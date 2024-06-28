@@ -31,6 +31,8 @@ import com.example.flashcard.ui.profile.ProfileScreen
 fun FlashcardNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
+    isDarkTheme: Boolean,
+    onThemeToggle: () -> Unit ,
     flashcardViewmodel: FlashcardViewModel = viewModel(factory = AppViewModelProvider.Factory),
     mcqViewmodel: MCQViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -45,7 +47,9 @@ fun FlashcardNavHost(
             HomeScreen(
                 navigateToAddCard = { navController.navigate("${AddCardDestination.route}/$it") },
                 modifier = modifier,
-                navController = navController
+                navController = navController,
+                isDarkTheme = isDarkTheme,
+                onToggleTheme = onThemeToggle
             )
         }
 

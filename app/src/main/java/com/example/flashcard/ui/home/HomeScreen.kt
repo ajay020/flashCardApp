@@ -28,6 +28,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -41,6 +42,7 @@ import com.example.flashcard.model.Category
 import com.example.flashcard.ui.components.ConfirmDeleteDialog
 import com.example.flashcard.ui.components.EditCategoryDialog
 import com.example.flashcard.ui.navigation.NavigationDestination
+import com.example.flashcard.ui.theme.FlashCardTheme
 
 import kotlinx.coroutines.launch
 
@@ -55,6 +57,8 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
+    isDarkTheme:Boolean,
+     onToggleTheme: () -> Unit
 ) {
     val homeUiState by viewModel.homeUiState.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -64,7 +68,9 @@ fun HomeScreen(
             MainTopBar(
                 showTitle = true,
                 title = stringResource(HomeDestination.titleRes),
-                onNavigateUp = { navController.navigateUp() }
+                onNavigateUp = { navController.navigateUp() },
+                isDarkTheme = isDarkTheme,
+                onThemeToggle = { onToggleTheme () }
             )
         }
     ) {
@@ -194,22 +200,28 @@ fun CategoryListItem(
             .clickable { onCategoryClick() }
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
-            .padding(8.dp),
+            .padding(dimensionResource(R.dimen.padding_small)),
     ) {
         Row(
             modifier = Modifier
                 .clickable { onCategoryClick() }
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(dimensionResource(id = R.dimen.padding_medium)),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
                 text = category.name,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.displayMedium,
                 color = MaterialTheme.colorScheme.onSurface,
                 modifier = Modifier.weight(1f)
             )
+//            Text(
+//                text = "(12 cards)",
+//                style = MaterialTheme.typography.displayMedium,
+//                color = MaterialTheme.colorScheme.onSurface,
+//                modifier = Modifier.weight(1f)
+//            )
             IconButton(onClick = { showEditDialog = true }) {
                 Icon(
                     imageVector = Icons.Default.Edit,
@@ -238,12 +250,16 @@ fun CategoryListItem(
 private fun CategoryItemPreview() {
     val category = Category(1, "Category 1")
 
-    CategoryListItem(
-        category = category,
-        onEdit = {},
-        onDelete = {},
-        onCategoryClick = {}
-    )
+    FlashCardTheme(
+        darkTheme = true
+    ) {
+        CategoryListItem(
+            category = category,
+            onEdit = {},
+            onDelete = {},
+            onCategoryClick = {}
+        )
+    }
 }
 
 @Preview(showBackground = true, widthDp = 320, heightDp = 320)
@@ -254,10 +270,15 @@ private fun CategoryListPreview() {
         Category(2, "Category 2"),
         Category(3, "Category 3")
     )
-    CategoryList(
-        categoryList = categoryList,
-        onCategoryClick = {},
-        onDelete = {},
-        onEdit = {}
-    )
+
+    FlashCardTheme(
+        darkTheme = true
+    ) {
+        CategoryList(
+            categoryList = categoryList,
+            onCategoryClick = {},
+            onDelete = {},
+            onEdit = {}
+        )
+    }
 }

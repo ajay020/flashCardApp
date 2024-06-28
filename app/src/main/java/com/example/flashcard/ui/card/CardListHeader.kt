@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.flashcard.ui.theme.FlashCardTheme
 
 @Composable
 fun CardListHeader(
@@ -30,14 +32,13 @@ fun CardListHeader(
     Column(
         modifier = modifier
             .fillMaxWidth()
-//            .background(Color.Red)
             .padding(16.dp),
-        verticalArrangement = Arrangement.SpaceEvenly,
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(
             modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(4.dp),
+            shape = MaterialTheme.shapes.extraSmall,
             onClick = onFlashcardClick
         ) {
             Text("Flashcards")
@@ -64,7 +65,10 @@ fun CardListHeader(
             shape = RoundedCornerShape(4.dp),
             onClick = onAddCardClick
         ) {
-            Text("Add card")
+            Text(
+                text ="Add card",
+                style = MaterialTheme.typography.labelLarge
+            )
         }
     }
 }
@@ -72,10 +76,14 @@ fun CardListHeader(
 @Preview(showBackground = true)
 @Composable
 private fun CardListHeaderPreview() {
-    CardListHeader(
-        onMCQClick = {},
-        onMatchClick = {},
-        onAddCardClick = {},
-        onFlashcardClick = {}
-    )
+    FlashCardTheme (
+        darkTheme = false
+    ){
+        CardListHeader(
+            onMCQClick = {},
+            onMatchClick = {},
+            onAddCardClick = {},
+            onFlashcardClick = {}
+        )
+    }
 }

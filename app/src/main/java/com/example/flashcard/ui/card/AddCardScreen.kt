@@ -24,6 +24,7 @@ import com.example.flashcard.ui.main.MainTopBar
 import com.example.flashcard.R
 import com.example.flashcard.model.Flashcard
 import com.example.flashcard.ui.navigation.NavigationDestination
+import com.example.flashcard.ui.theme.FlashCardTheme
 import kotlinx.coroutines.launch
 
 object AddCardDestination : NavigationDestination {
@@ -152,15 +153,20 @@ private fun AddCardContentPreview() {
             categoryId = 1
         )
     )
-    AddCardContent(
-        onCardValueChange = {},
-        uiState = CardUiState(),
-        onSavedClick = {},
-        flashCardsList = flashcards,
-        onMatchClick = { /* Handle Match click */ },
-        onFlashcardClick = { /* Handle Flashcard click */ },
-        onMCQClick = { /* Handle MCQ click */ }
-    )
+
+    FlashCardTheme (
+        darkTheme = true
+    ){
+        AddCardContent(
+            onCardValueChange = {},
+            uiState = CardUiState(),
+            onSavedClick = {},
+            flashCardsList = flashcards,
+            onMatchClick = { /* Handle Match click */ },
+            onFlashcardClick = { /* Handle Flashcard click */ },
+            onMCQClick = { /* Handle MCQ click */ }
+        )
+    }
 }
 
 
