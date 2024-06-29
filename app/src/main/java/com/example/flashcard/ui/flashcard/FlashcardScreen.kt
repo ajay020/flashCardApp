@@ -68,12 +68,8 @@ fun FlashcardScreen(
         viewModel.getFlashcardsByCategory(categoryId)
     }
 
-    LaunchedEffect(uiState.canNavigateToResultScreen){
+    LaunchedEffect(uiState.canNavigateToResultScreen) {
         if (uiState.canNavigateToResultScreen) {
-//            Log.d(
-//                "FlashcardScreen",
-//                "Navigating to result screen: currentIndex=${uiState.currentIndex}"
-//            )
             onNavigateToFlashcardResultScreen()
         }
     }
@@ -87,9 +83,7 @@ fun FlashcardScreen(
             )
 
         },
-        modifier = modifier.fillMaxSize()
     ) { paddingValues ->
-        Log.d("FlashcardScreen", "uiState: $uiState")
 
         if (uiState.loading) {
             // Display a loading indicator while the data is being loaded
@@ -109,8 +103,7 @@ fun FlashcardScreen(
                         start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
                         top = paddingValues.calculateTopPadding(),
                         end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
-                    )
-                    .fillMaxSize(),
+                    ),
                 flashcard = uiState.currentFlashcard,
                 onCorrectAnswer = {
                     viewModel.onCorrectAnswer()
@@ -132,7 +125,6 @@ fun FlashcardScreenContent(
 ) {
     Column(
         modifier = modifier
-            .background(Color.Gray)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
