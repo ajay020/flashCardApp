@@ -23,35 +23,6 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun BottomSheet(
-    showCategoryDialog: () -> Unit,
-    modifier: Modifier = Modifier,
-    sheetState: SheetState,
-    coroutineScope: CoroutineScope,
-    showBottomSheet: Boolean,
-    hideBottomSheet: () -> Unit
-) {
-
-    if (showBottomSheet) {
-        ModalBottomSheet(
-            onDismissRequest = hideBottomSheet,
-            sheetState = sheetState
-        ) {
-            SheetContent(
-                showCategoryDialog = showCategoryDialog,
-                onClose = {
-                    coroutineScope.launch { sheetState.hide() }.invokeOnCompletion {
-                        if (!sheetState.isVisible) {
-                            hideBottomSheet()
-                        }
-                    }
-                }
-            )
-        }
-    }
-}
 
 @Composable
 fun SheetContent(

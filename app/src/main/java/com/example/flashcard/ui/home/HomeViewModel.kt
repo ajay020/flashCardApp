@@ -1,7 +1,9 @@
 package com.example.flashcard.ui.home
 
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flashcard.data.FlashcardRepository
@@ -26,21 +28,65 @@ class HomeViewModel(
      * [HomeUiState]
      */
 
-    val homeUiState: StateFlow<HomeUiState> =
-        flashcardRepository.getAllCategoriesStream().map { HomeUiState(it) }
-            .stateIn(
+    val categoryListFlow: StateFlow<List<Category>> =
+        flashcardRepository.getAllCategoriesStream()
+            .map {
+                it
+            }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-                initialValue = HomeUiState()
+                initialValue = emptyList()
             )
+    var homeUiState by mutableStateOf(HomeUiState())
+        private set
 
-    suspend fun deleteCategory(category: Category){
+    var showDialog by mutableStateOf(false)
+
+    suspend fun deleteCategory(category: Category) {
         flashcardRepository.deleteCategory(category)
     }
 
-    suspend fun updateCategory(category: Category){
+    suspend fun updateCategory(category: Category) {
         Log.d("HomeViewModel", "Updating category: $category")
-      flashcardRepository.updateCategory(category)
+        flashcardRepository.updateCategory(category)
+    }
+
+    fun updateUiState(categoryDetails: CategoryDetails) {
+        homeUiState = homeUiState.copy(
+            categoryDetails = categoryDetails,
+            isEntryValid = validateInput(categoryDetails)
+        )
+    }
+
+    suspend fun saveCategory() {
+        if (validateInput()) {
+            val isSaved =
+                flashcardRepository.insertCategory(homeUiState.categoryDetails.toCategory())
+            homeUiState = homeUiState.copy(isDuplicateError = !isSaved)
+
+            // Saved category successfully, reset the form
+            if (isSaved) {
+                resetCategory()
+            }
+        }
+    }
+
+    fun clearError() {
+        homeUiState = homeUiState.copy(
+            isDuplicateError = false
+        )
+        resetCategory()
+    }
+
+    private fun resetCategory() {
+        val categoryDetails = homeUiState.categoryDetails.copy(name = "")
+        homeUiState = homeUiState.copy(categoryDetails = categoryDetails)
+    }
+
+    private fun validateInput(categoryDetails: CategoryDetails = homeUiState.categoryDetails): Boolean {
+        with(categoryDetails) {
+            return name.isNotBlank()
+        }
     }
 
     companion object {
@@ -49,5 +95,20 @@ class HomeViewModel(
 }
 
 data class HomeUiState(
-    val categoryList: List<Category> = emptyList()
+    val categoryDetails: CategoryDetails = CategoryDetails(),
+    val isEntryValid: Boolean = false,
+    val isDuplicateError: Boolean = false
 )
+
+
+data class CategoryDetails(
+    val id: Int = 0,
+    val name: String = "",
+)
+
+fun CategoryDetails.toCategory(): Category {
+    return Category(
+        id = id,
+        name = name.trim()
+    )
+}

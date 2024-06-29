@@ -1,8 +1,6 @@
 package com.example.flashcard
 
 import AddCardViewModel
-import FlashcardApp
-import MainScreenViewModel
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
@@ -11,14 +9,10 @@ import com.example.flashcard.ui.card.CardListViewModel
 import com.example.flashcard.ui.flashcard.FlashcardViewModel
 import com.example.flashcard.ui.home.HomeViewModel
 import com.example.flashcard.ui.mcq.MCQViewModel
-import com.example.flashcard.ui.navigation.FlashcardNavHost
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
-        // Initializer for FlashCardViewModel
-        initializer {
-            MainScreenViewModel(flashcardApplication().container.flashcardRepository)
-        }
+
         initializer {
             HomeViewModel(flashcardApplication().container.flashcardRepository)
         }

@@ -5,15 +5,19 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +32,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -39,11 +44,11 @@ import com.example.flashcard.AppViewModelProvider
 import com.example.flashcard.ui.main.MainTopBar
 import com.example.flashcard.R
 import com.example.flashcard.model.Category
+import com.example.flashcard.ui.components.CategoryCreateDialog
 import com.example.flashcard.ui.components.ConfirmDeleteDialog
 import com.example.flashcard.ui.components.EditCategoryDialog
 import com.example.flashcard.ui.navigation.NavigationDestination
 import com.example.flashcard.ui.theme.FlashCardTheme
-
 import kotlinx.coroutines.launch
 
 object HomeDestination : NavigationDestination {
@@ -57,26 +62,43 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavController,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    isDarkTheme:Boolean,
-     onToggleTheme: () -> Unit
+    isDarkTheme: Boolean,
+    onToggleTheme: () -> Unit
 ) {
-    val homeUiState by viewModel.homeUiState.collectAsState()
+    val categoryList by viewModel.categoryListFlow.collectAsState()
+    val homeUiState = viewModel.homeUiState
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    viewModel.showDialog = true
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add"
+                )
+            }
+        },
         topBar = {
             MainTopBar(
                 showTitle = true,
                 title = stringResource(HomeDestination.titleRes),
                 onNavigateUp = { navController.navigateUp() },
                 isDarkTheme = isDarkTheme,
-                onThemeToggle = { onToggleTheme () }
+                onThemeToggle = { onToggleTheme() }
             )
         }
-    ) {
+    ) { paddingValues ->
         HomeScreenContent(
-            modifier = modifier.padding(it),
-            categoryList = homeUiState.categoryList,
+            modifier = Modifier.padding(
+                start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
+                top = paddingValues.calculateTopPadding(),
+                end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
+            ),
+            categoryList = categoryList,
             onCategoryClick = {
                 navigateToAddCard(it.id)
             },
@@ -91,6 +113,26 @@ fun HomeScreen(
                 }
             }
         )
+
+        if (viewModel.showDialog) {
+            CategoryCreateDialog(
+                onDismiss = {
+                    viewModel.showDialog = false
+                    viewModel.clearError()
+                },
+                onConfirm = {
+                    coroutineScope.launch {
+                        viewModel.saveCategory()
+                        if (!viewModel.homeUiState.isDuplicateError) {
+                            viewModel.showDialog = false
+                        }
+                    }
+                },
+                onCategoryValueChange = viewModel::updateUiState,
+                categoryDetails = homeUiState.categoryDetails,
+                isDuplicateError = homeUiState.isDuplicateError
+            )
+        }
     }
 }
 
@@ -106,7 +148,7 @@ fun HomeScreenContent(
         EmptyCategoryMessage(modifier = modifier)
     } else {
         CategoryList(
-            modifier = modifier,
+            modifier = modifier.fillMaxSize(),
             categoryList = categoryList,
             onCategoryClick = onCategoryClick,
             onDelete = onDeleteCategory,
