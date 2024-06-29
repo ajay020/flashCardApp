@@ -76,12 +76,11 @@ fun FlashcardScreen(
 
     Scaffold(
         topBar = {
-            MainTopBar(
-                title = stringResource(id = FlashcardDestination.titleRes),
-                canNavigateBack = true,
-                onNavigateUp = onNavigateUp
-            )
-
+           FlashcardTopBar(
+               canClose = true,
+               title = " ${uiState.currentIndex} /${uiState.flashcards.size}",
+               onClose = onNavigateUp
+           )
         },
     ) { paddingValues ->
 

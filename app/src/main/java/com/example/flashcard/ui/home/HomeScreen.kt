@@ -88,7 +88,8 @@ fun HomeScreen(
                 title = stringResource(HomeDestination.titleRes),
                 onNavigateUp = { navController.navigateUp() },
                 isDarkTheme = isDarkTheme,
-                onThemeToggle = { onToggleTheme() }
+                onThemeToggle = { onToggleTheme() },
+                showThemeButton = true
             )
         }
     ) { paddingValues ->

@@ -48,7 +48,6 @@ fun FlashcardResultScreen(
     Scaffold(
         topBar = {
             FlashcardTopBar(
-                title = stringResource(FlashcardResultDestination.titleRes),
                 onClose = {
                     viewModel.resetUiState()
                     onBackPressed()
@@ -75,6 +74,7 @@ fun ResultScreenContent(
     val totalAnswers = correctAnswers + incorrectAnswers
     val correctProgress = if (totalAnswers > 0) correctAnswers.toFloat() / totalAnswers else 0f
     val incorrectProgress = if (totalAnswers > 0) incorrectAnswers.toFloat() / totalAnswers else 0f
+    val percentage = (correctAnswers.toFloat() / totalAnswers) * 100
 
     Column(
         modifier = modifier
@@ -85,6 +85,10 @@ fun ResultScreenContent(
     ) {
         // Donut Chart
         Box(contentAlignment = Alignment.Center) {
+            Text(
+                text = percentage.toInt().toString() + "%",
+                style = MaterialTheme.typography.headlineLarge,
+            )
             CircularProgressIndicator(
                 progress = { 1f },
                 modifier = Modifier.size(150.dp),

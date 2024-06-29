@@ -1,12 +1,10 @@
 package com.example.flashcard.ui.flashcard
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -37,16 +35,12 @@ fun FlashcardTopBar(
     title: String = "",
 ) {
 
-    TopAppBar(
+    CenterAlignedTopAppBar(
         modifier = modifier.height(56.dp),
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.Transparent,
             titleContentColor = Color.Blue
         ),
-//        modifier = Modifier
-//            .border(2.dp, Color.Red, RectangleShape)
-//            .padding(4.dp)
-//            .background(Color.Green),
         title = {
             Text(
                 text = title,

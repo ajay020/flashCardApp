@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.BottomAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -101,11 +102,13 @@ fun MainTopBar(
     canNavigateBack: Boolean = false,
     onNavigateUp: () -> Unit = {},
     showTitle: Boolean = false,
+    showThemeButton: Boolean = false,
     isDarkTheme: Boolean = false,
     onThemeToggle: () -> Unit = {},
     title: String = stringResource(id = R.string.app_name),
 ) {
-    TopAppBar(
+
+    CenterAlignedTopAppBar(
         modifier = modifier,
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = MaterialTheme.colorScheme.primary,
@@ -130,13 +133,15 @@ fun MainTopBar(
             }
         },
         actions = {
-            IconButton(onClick = onThemeToggle) {
-                Icon(
-                    imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
-                    contentDescription = "Toggle Theme",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
-            }
+           if(showThemeButton){
+               IconButton(onClick = onThemeToggle) {
+                   Icon(
+                       imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
+                       contentDescription = "Toggle Theme",
+                       tint = MaterialTheme.colorScheme.onPrimary
+                   )
+               }
+           }
         }
     )
 }

@@ -1,7 +1,7 @@
 package com.example.flashcard.ui.mcq
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -35,6 +35,8 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.flashcard.model.MultipleChoiceQuestion
 
 object MCQDestination : NavigationDestination {
     override val route = "multiple_choice_question"
@@ -66,14 +68,16 @@ fun MultipleChoiceQuestionScreen(
         topBar = {
             FlashcardTopBar(
                 canClose = true,
-                onClose = onNavigateUp
+                onClose = onNavigateUp,
+                title = "${uiState.currentIndex} / ${uiState.questions.size}"
             )
         }
     ) { paddingValues ->
 
         MCQContent(
             modifier = Modifier.padding(paddingValues),
-            uiState = uiState,
+            currentQuestion = uiState.currentQuestion,
+            selectedAnswer = uiState.selectedAnswer,
             onAnswerSelected = { option ->
                 viewModel.onAnswerSelected(option)
             },
@@ -87,16 +91,17 @@ fun MultipleChoiceQuestionScreen(
 @Composable
 fun MCQContent(
     modifier: Modifier = Modifier,
-    uiState: MCQUiState,
+    currentQuestion: MultipleChoiceQuestion?,
+    selectedAnswer: String?,
     onAnswerSelected: (String) -> Unit,
     onNextQuestion: () -> Unit
 ) {
-    val currentQuestion = uiState.currentQuestion
     if (currentQuestion != null) {
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center
         ) {
             QuestionSection(
                 question = currentQuestion.question
@@ -104,18 +109,24 @@ fun MCQContent(
             OptionsSection(
                 options = currentQuestion.options,
                 correctAnswer = currentQuestion.answer,
-                selectedAnswer = uiState.selectedAnswer,
+                selectedAnswer = selectedAnswer,
                 onAnswerSelected = onAnswerSelected
             )
 
-            if (uiState.selectedAnswer != null) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Button(
-                    onClick = onNextQuestion,
-                    modifier = Modifier.align(Alignment.End)
-                ) {
-                    Text("Next")
-                }
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(
+                onClick = onNextQuestion,
+                enabled = selectedAnswer != null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp),
+                shape = RoundedCornerShape(4.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            ) {
+                Text("Next")
             }
         }
     } else {
@@ -138,6 +149,7 @@ fun QuestionSection(
             .padding(bottom = 16.dp)
     )
 }
+
 
 @Composable
 fun OptionsSection(
@@ -189,6 +201,23 @@ fun LoadingIndicator(
             modifier = Modifier.size(48.dp)
         )
     }
+}
+
+
+@Preview(showBackground = true)
+@Composable
+private fun MCQContentPreview() {
+    val currentQuestion = MultipleChoiceQuestion(
+        question = "Question 1",
+        options = listOf("Option 1", "Option 2", "Option 3"),
+        answer = "Option 1"
+    )
+    MCQContent(
+        currentQuestion = currentQuestion,
+        selectedAnswer = "",
+        onAnswerSelected = {},
+        onNextQuestion = {}
+    )
 }
 
 @Preview(showBackground = true)
