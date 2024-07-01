@@ -18,6 +18,7 @@ import com.example.flashcard.ui.theme.ThemeViewModel
 
 class MainActivity : ComponentActivity() {
     private val themeViewModel by viewModels<ThemeViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()

@@ -7,4 +7,5 @@
     <string name="flashcard_result">Flashcard result</string>
     <string name="multiple_choice_questions">MCQs</string>
     <string name="mcq_result">MCQ Result</string>
+    <string name="settings">settings</string>
 </resources>

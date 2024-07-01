@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LightMode
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -98,9 +99,7 @@ fun MainTopBar(
     canNavigateBack: Boolean = false,
     onNavigateUp: () -> Unit = {},
     showTitle: Boolean = false,
-    showThemeButton: Boolean = false,
-    isDarkTheme: Boolean = false,
-    onThemeToggle: () -> Unit = {},
+    onSettingsClick: () -> Unit = {},
     title: String = stringResource(id = R.string.app_name),
 ) {
 
@@ -129,15 +128,13 @@ fun MainTopBar(
             }
         },
         actions = {
-           if(showThemeButton){
-               IconButton(onClick = onThemeToggle) {
-                   Icon(
-                       imageVector = if (isDarkTheme) Icons.Default.LightMode else Icons.Default.DarkMode,
-                       contentDescription = "Toggle Theme",
-                       tint = MaterialTheme.colorScheme.onPrimary
-                   )
-               }
-           }
+            IconButton(onClick = onSettingsClick) {
+                Icon(
+                    imageVector = Icons.Default.Settings,
+                    contentDescription = "Settings",
+                    tint = MaterialTheme.colorScheme.onPrimary
+                )
+            }
         }
     )
 }

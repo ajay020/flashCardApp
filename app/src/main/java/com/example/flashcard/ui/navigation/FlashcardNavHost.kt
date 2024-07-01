@@ -26,6 +26,8 @@ import com.example.flashcard.ui.mcq.MCQResultScreen
 import com.example.flashcard.ui.mcq.MultipleChoiceQuestionScreen
 import com.example.flashcard.ui.profile.ProfileDestination
 import com.example.flashcard.ui.profile.ProfileScreen
+import com.example.flashcard.ui.settings.SettingsDestination
+import com.example.flashcard.ui.settings.SettingsScreen
 
 @Composable
 fun FlashcardNavHost(
@@ -46,10 +48,10 @@ fun FlashcardNavHost(
         ) {
             HomeScreen(
                 navigateToAddCard = { navController.navigate("${AddCardDestination.route}/$it") },
-                modifier = modifier,
-                navController = navController,
                 isDarkTheme = isDarkTheme,
-                onToggleTheme = onThemeToggle
+                onToggleTheme = onThemeToggle,
+                navigateToSettings = { navController.navigate(SettingsDestination.route)},
+                onNavigateUp = { navController.navigateUp() },
             )
         }
 
@@ -150,6 +152,15 @@ fun FlashcardNavHost(
                         inclusive = false
                     )
                 }
+            )
+        }
+        composable(SettingsDestination.route) {
+            SettingsScreen(
+                isDarkTheme = isDarkTheme,
+                onThemeToggle = onThemeToggle,
+                isReminderEnabled = false, // Replace with your reminder state
+                onReminderToggle = { /* Handle reminder toggle */ },
+                onNavigateUp = { navController.popBackStack() },
             )
         }
     }

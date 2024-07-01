@@ -1,6 +1,7 @@
 package com.example.flashcard.ui.mcq
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -74,17 +75,25 @@ fun MultipleChoiceQuestionScreen(
         }
     ) { paddingValues ->
 
-        MCQContent(
-            modifier = Modifier.padding(paddingValues),
-            currentQuestion = uiState.currentQuestion,
-            selectedAnswer = uiState.selectedAnswer,
-            onAnswerSelected = { option ->
-                viewModel.onAnswerSelected(option)
-            },
-            onNextQuestion = {
-                viewModel.onNextQuestion()
-            }
-        )
+        if (uiState.questions.isEmpty()) {
+            LoadingIndicator(
+                modifier = Modifier.padding(paddingValues)
+            )
+        } else {
+            MCQContent(
+                modifier = Modifier.padding(paddingValues),
+                currentQuestion = uiState.currentQuestion,
+                selectedAnswer = uiState.selectedAnswer,
+                onAnswerSelected = { option ->
+                    viewModel.onAnswerSelected(option)
+                },
+                onNextQuestion = {
+                    viewModel.onNextQuestion()
+                }
+            )
+        }
+
+
     }
 }
 
@@ -150,7 +159,6 @@ fun QuestionSection(
     )
 }
 
-
 @Composable
 fun OptionsSection(
     options: List<String>,
@@ -192,13 +200,15 @@ fun LoadingIndicator(
     modifier: Modifier = Modifier
 ) {
     Box(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .background(MaterialTheme.colorScheme.background)
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        CircularProgressIndicator(
-            strokeWidth = 4.dp,
-            color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(48.dp)
+        Text(
+            text = "Add some cards",
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onPrimary
         )
     }
 }

@@ -64,8 +64,8 @@ object HomeDestination : NavigationDestination {
 @Composable
 fun HomeScreen(
     navigateToAddCard: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-    navController: NavController,
+    navigateToSettings: () -> Unit,
+    onNavigateUp: () -> Unit,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
     isDarkTheme: Boolean,
     onToggleTheme: () -> Unit
@@ -91,10 +91,8 @@ fun HomeScreen(
             MainTopBar(
                 showTitle = true,
                 title = stringResource(HomeDestination.titleRes),
-                onNavigateUp = { navController.navigateUp() },
-                isDarkTheme = isDarkTheme,
-                onThemeToggle = { onToggleTheme() },
-                showThemeButton = true
+                onNavigateUp = onNavigateUp,
+                onSettingsClick = navigateToSettings
             )
         }
     ) { paddingValues ->
