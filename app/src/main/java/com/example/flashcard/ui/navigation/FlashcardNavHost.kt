@@ -1,6 +1,8 @@
 package com.example.flashcard.ui.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -28,13 +30,14 @@ import com.example.flashcard.ui.profile.ProfileDestination
 import com.example.flashcard.ui.profile.ProfileScreen
 import com.example.flashcard.ui.settings.SettingsDestination
 import com.example.flashcard.ui.settings.SettingsScreen
+import com.example.flashcard.ui.settings.SettingsViewModel
 
 @Composable
 fun FlashcardNavHost(
     navController: NavHostController,
     modifier: Modifier = Modifier,
     isDarkTheme: Boolean,
-    onThemeToggle: () -> Unit ,
+    onThemeToggle: () -> Unit,
     flashcardViewmodel: FlashcardViewModel = viewModel(factory = AppViewModelProvider.Factory),
     mcqViewmodel: MCQViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
@@ -50,7 +53,7 @@ fun FlashcardNavHost(
                 navigateToAddCard = { navController.navigate("${AddCardDestination.route}/$it") },
                 isDarkTheme = isDarkTheme,
                 onToggleTheme = onThemeToggle,
-                navigateToSettings = { navController.navigate(SettingsDestination.route)},
+                navigateToSettings = { navController.navigate(SettingsDestination.route) },
                 onNavigateUp = { navController.navigateUp() },
             )
         }
@@ -154,12 +157,16 @@ fun FlashcardNavHost(
                 }
             )
         }
+
         composable(SettingsDestination.route) {
+            val viewModel: SettingsViewModel = viewModel( factory =  AppViewModelProvider.Factory )
+            val isReminderEnabled by viewModel.isReminderEnabled.collectAsState()
+
             SettingsScreen(
                 isDarkTheme = isDarkTheme,
                 onThemeToggle = onThemeToggle,
-                isReminderEnabled = false, // Replace with your reminder state
-                onReminderToggle = { /* Handle reminder toggle */ },
+                isReminderEnabled = isReminderEnabled, // Replace with your reminder state
+                onReminderToggle = { viewModel.toggleReminder() },
                 onNavigateUp = { navController.popBackStack() },
             )
         }

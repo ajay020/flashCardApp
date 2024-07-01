@@ -7,6 +7,7 @@ import android.content.Context
  */
 interface AppContainer {
     val flashcardRepository: FlashcardRepository
+    val workManagerReminderRepository: ReminderRepository
 }
 
 /**
@@ -19,4 +20,6 @@ class AppDataContainer(private val context: Context) : AppContainer {
             categoryDao = FlashcardDatabase.getDatabase(context).categoryDao()
         )
     }
+    override val workManagerReminderRepository: ReminderRepository
+        get() = WorkManagerReminderRepository(context)
 }

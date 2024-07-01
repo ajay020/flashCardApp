@@ -8,4 +8,6 @@
     <string name="multiple_choice_questions">MCQs</string>
     <string name="mcq_result">MCQ Result</string>
     <string name="settings">settings</string>
+    <string name="reminder_title">Practise your cards</string>
+    <string name="reminder_text">It\'s time to review your cards!</string>
 </resources>
