@@ -13,18 +13,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.example.flashcard.model.Category
-import java.lang.Error
+import com.example.flashcard.ui.home.CategoryDetails
 
 @Composable
 fun EditCategoryDialog(
-    category: Category,
-    onConfirm: (Category) -> Unit,
+    categoryDetails: CategoryDetails,
+    onConfirm: (CategoryDetails) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    var newName by remember { mutableStateOf(category.name) }
+    var newName by remember { mutableStateOf(categoryDetails.name) }
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -39,7 +37,16 @@ fun EditCategoryDialog(
             }
         },
         confirmButton = {
-            TextButton(onClick = { onConfirm(Category(name = newName, id = category.id)) }) {
+            TextButton(
+                onClick = {
+                    onConfirm(
+                        CategoryDetails(
+                            id = categoryDetails.id,
+                            name = newName,
+                            flashcardCount = categoryDetails.flashcardCount
+                        )
+                    )
+                }) {
                 Text("Rename")
             }
         },

@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.flashcard.data.FlashcardRepository
@@ -28,8 +29,8 @@ class HomeViewModel(
      * [HomeUiState]
      */
 
-    val categoryListFlow: StateFlow<List<Category>> =
-        flashcardRepository.getAllCategoriesStream()
+    val categoryListFlow: StateFlow<List<CategoryDetails>> =
+        flashcardRepository.getCategoriesWithFlashcardCount()
             .map {
                 it
             }.stateIn(
@@ -42,13 +43,12 @@ class HomeViewModel(
 
     var showDialog by mutableStateOf(false)
 
-    suspend fun deleteCategory(category: Category) {
-        flashcardRepository.deleteCategory(category)
+    suspend fun deleteCategory(categoryDetails: CategoryDetails) {
+        flashcardRepository.deleteCategory(categoryDetails.toCategory())
     }
 
-    suspend fun updateCategory(category: Category) {
-        Log.d("HomeViewModel", "Updating category: $category")
-        flashcardRepository.updateCategory(category)
+    suspend fun updateCategory(categoryDetails: CategoryDetails) {
+        flashcardRepository.updateCategory(categoryDetails.toCategory())
     }
 
     fun updateUiState(categoryDetails: CategoryDetails) {
@@ -104,7 +104,9 @@ data class HomeUiState(
 data class CategoryDetails(
     val id: Int = 0,
     val name: String = "",
+    val flashcardCount: Int = 0
 )
+
 
 fun CategoryDetails.toCategory(): Category {
     return Category(

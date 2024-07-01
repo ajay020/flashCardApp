@@ -65,7 +65,8 @@ dependencies {
 
     // room
     implementation("androidx.room:room-runtime:2.6.1") // Or latest version
-    implementation("androidx.room:room-ktx:2.6.1") // For Kotlin extensions
+    implementation("androidx.room:room-ktx:2.6.1")
+    implementation(libs.androidx.runtime.livedata) // For Kotlin extensions
     ksp("androidx.room:room-compiler:2.6.1") // For annotation processing
 
     implementation ("androidx.compose.material:material-icons-extended:1.6.8")

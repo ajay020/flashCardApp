@@ -4,11 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -26,6 +29,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -47,13 +51,14 @@ import com.example.flashcard.model.Category
 import com.example.flashcard.ui.components.CategoryCreateDialog
 import com.example.flashcard.ui.components.ConfirmDeleteDialog
 import com.example.flashcard.ui.components.EditCategoryDialog
+import com.example.flashcard.ui.main.FlashCardAppPreview
 import com.example.flashcard.ui.navigation.NavigationDestination
 import com.example.flashcard.ui.theme.FlashCardTheme
 import kotlinx.coroutines.launch
 
 object HomeDestination : NavigationDestination {
     override val route = "home"
-    override val titleRes = R.string.home_title
+    override val titleRes = R.string.app_name
 }
 
 @Composable
@@ -139,10 +144,10 @@ fun HomeScreen(
 
 @Composable
 fun HomeScreenContent(
-    categoryList: List<Category>,
-    onCategoryClick: (Category) -> Unit,
-    onDeleteCategory: (Category) -> Unit,
-    onEditCategory: (Category) -> Unit,
+    categoryList: List<CategoryDetails>,
+    onCategoryClick: (CategoryDetails) -> Unit,
+    onDeleteCategory: (CategoryDetails) -> Unit,
+    onEditCategory: (CategoryDetails) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (categoryList.isEmpty()) {
@@ -164,22 +169,24 @@ fun EmptyCategoryMessage(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
         Text(
-            text = "Create a Category",
+            text = "Add a Category",
             textAlign = TextAlign.Center,
-            style = MaterialTheme.typography.bodyMedium
+            color = MaterialTheme.colorScheme.onBackground,
+            style = MaterialTheme.typography.displaySmall
         )
     }
 }
 
 @Composable
 fun CategoryList(
-    categoryList: List<Category>,
-    onCategoryClick: (Category) -> Unit,
-    onDelete: (Category) -> Unit,
-    onEdit: (Category) -> Unit,
+    categoryList: List<CategoryDetails>,
+    onCategoryClick: (CategoryDetails) -> Unit,
+    onDelete: (CategoryDetails) -> Unit,
+    onEdit: (CategoryDetails) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -188,7 +195,7 @@ fun CategoryList(
     ) {
         items(categoryList) {
             CategoryListItem(
-                category = it,
+                categoryDetails = it,
                 onEdit = onEdit,
                 onCategoryClick = { onCategoryClick(it) },
                 onDelete = onDelete
@@ -200,10 +207,10 @@ fun CategoryList(
 
 @Composable
 fun CategoryListItem(
-    category: Category,
-    onEdit: (Category) -> Unit,
+    categoryDetails: CategoryDetails,
+    onEdit: (CategoryDetails) -> Unit,
     onCategoryClick: () -> Unit,
-    onDelete: (Category) -> Unit,
+    onDelete: (CategoryDetails) -> Unit,
 ) {
 
     var showDialog by remember {
@@ -216,7 +223,7 @@ fun CategoryListItem(
 
     if (showEditDialog) {
         EditCategoryDialog(
-            category = category,
+            categoryDetails = categoryDetails,
             onConfirm = {
                 onEdit(it)
                 showEditDialog = false
@@ -229,10 +236,10 @@ fun CategoryListItem(
 
     if (showDialog) {
         ConfirmDeleteDialog(
-            category = category,
+            category = categoryDetails,
             onConfirm = {
                 showDialog = false
-                onDelete(category)
+                onDelete(categoryDetails)
             },
             onDismiss = { showDialog = false }
         )
@@ -249,22 +256,30 @@ fun CategoryListItem(
             modifier = Modifier
                 .clickable { onCategoryClick() }
                 .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_medium)),
+                .padding(
+                    horizontal = dimensionResource(id = R.dimen.padding_small),
+                    vertical = dimensionResource(id = R.dimen.padding_medium)
+                ),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                text = category.name,
-                style = MaterialTheme.typography.displayMedium,
-                color = MaterialTheme.colorScheme.onSurface,
-                modifier = Modifier.weight(1f)
-            )
-//            Text(
-//                text = "(12 cards)",
-//                style = MaterialTheme.typography.displayMedium,
-//                color = MaterialTheme.colorScheme.onSurface,
-//                modifier = Modifier.weight(1f)
-//            )
+
+            Column (
+                modifier = Modifier.weight(1f),
+            ){
+                Text(
+                    text = categoryDetails.name,
+                    style = MaterialTheme.typography.displayMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = "${categoryDetails.flashcardCount} cards",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+            }
+
             IconButton(onClick = { showEditDialog = true }) {
                 Icon(
                     imageVector = Icons.Default.Edit,
@@ -288,16 +303,26 @@ fun CategoryListItem(
 }
 
 
+@Preview(showBackground = false)
+@Composable
+private fun EmptyCategoryMessagePreview() {
+//    FlashCardTheme(
+//        darkTheme = false
+//    ) {
+//        EmptyCategoryMessage()
+//    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun CategoryItemPreview() {
-    val category = Category(1, "Category 1")
+    val category = CategoryDetails(1, "Category 1", flashcardCount = 12)
 
     FlashCardTheme(
         darkTheme = true
     ) {
         CategoryListItem(
-            category = category,
+            categoryDetails = category,
             onEdit = {},
             onDelete = {},
             onCategoryClick = {}
@@ -309,9 +334,9 @@ private fun CategoryItemPreview() {
 @Composable
 private fun CategoryListPreview() {
     val categoryList = listOf(
-        Category(1, "Category 1"),
-        Category(2, "Category 2"),
-        Category(3, "Category 3")
+        CategoryDetails(1, "CategoryDetails 1"),
+        CategoryDetails(2, "CategoryDetails 2"),
+        CategoryDetails(3, "CategoryDetails 3")
     )
 
     FlashCardTheme(

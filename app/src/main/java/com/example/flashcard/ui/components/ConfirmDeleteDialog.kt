@@ -5,10 +5,12 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import com.example.flashcard.model.Category
+import com.example.flashcard.ui.home.CategoryDetails
+
 
 @Composable
 fun ConfirmDeleteDialog(
-    category: Category,
+    category: CategoryDetails,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit
 ) {

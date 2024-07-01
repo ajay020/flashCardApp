@@ -51,38 +51,34 @@ object MainScreenNavigation : NavigationDestination {
     override val titleRes: Int = R.string.app_name
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     modifier: Modifier = Modifier,
     isDarkTheme: Boolean,
     onThemeToggle: () -> Unit
 ) {
-
     val navController = rememberNavController()
-    var showBottomSheet by remember { mutableStateOf(false) }
-
     // Get the current backstack entry to determine the current route
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
 
     Scaffold(
-        bottomBar = {
-            if (currentRoute?.startsWith(MCQDestination.route) == false
-                && currentRoute != AddCardDestination.routeWithArgs
-                && currentRoute != MCQResultDestination.route
-                && !currentRoute.startsWith(
-                    FlashcardDestination.route
-                )
-            ) {
-                FlashCardBottomAppBar(
-                    navController = navController,
-                    modifier = modifier,
-                    onAddClick = { showBottomSheet = true }
-                )
-            }
-
-        },
+//        bottomBar = {
+//            if (currentRoute?.startsWith(MCQDestination.route) == false
+//                && currentRoute != AddCardDestination.routeWithArgs
+//                && currentRoute != MCQResultDestination.route
+//                && !currentRoute.startsWith(
+//                    FlashcardDestination.route
+//                )
+//            ) {
+//                FlashCardBottomAppBar(
+//                    navController = navController,
+//                    modifier = modifier,
+//                    onAddClick = { showBottomSheet = true }
+//                )
+//            }
+//
+//        },
         modifier = Modifier.fillMaxSize()
     ) { innerPadding ->
 

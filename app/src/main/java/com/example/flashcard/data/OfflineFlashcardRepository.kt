@@ -1,7 +1,9 @@
 package com.example.flashcard.data
 
+import androidx.lifecycle.LiveData
 import com.example.flashcard.model.Category
 import com.example.flashcard.model.Flashcard
+import com.example.flashcard.ui.home.CategoryDetails
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext
@@ -48,6 +50,10 @@ class OfflineFlashcardRepository (
         return categoryDao.getCategoryStream(category.id)
     }
 
+    override fun getCategoriesWithFlashcardCount(): Flow<List<CategoryDetails>> {
+        return flashcardDao.getCategoriesWithFlashcardCount()
+    }
+
     // ========================= Flash card =================================
 
     override suspend fun insertFlashcard(flashcard: Flashcard) {
@@ -59,7 +65,6 @@ class OfflineFlashcardRepository (
     }
 
     override suspend fun deleteFlashcard(flashcard: Flashcard) {
-        TODO("Not yet implemented")
     }
 
     override fun getAllFlashcardsStream(): Flow<List<Flashcard>> = flashcardDao.getAllFlashcards()
