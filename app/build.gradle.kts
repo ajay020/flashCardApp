@@ -74,6 +74,9 @@ dependencies {
     // WorkManager dependency
     implementation("androidx.work:work-runtime-ktx:2.8.1")
 
+    // data store
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -11,11 +11,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.flashcard.R
 import com.example.flashcard.ui.main.MainTopBar
 import com.example.flashcard.ui.navigation.NavigationDestination
@@ -30,11 +32,12 @@ object SettingsDestination : NavigationDestination {
 fun SettingsScreen(
     isDarkTheme: Boolean,
     onThemeToggle: () -> Unit,
-    isReminderEnabled: Boolean,
-    onReminderToggle: (Boolean) -> Unit,
     onNavigateUp: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    settingsViewModel: SettingsViewModel = viewModel(factory = SettingsViewModel.Factory)
 ) {
+    val isReminderEnabled = settingsViewModel.isReminderEnabled.collectAsState().value
+
     Scaffold(
         topBar = {
             MainTopBar(
@@ -73,7 +76,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 Switch(
                     checked = isReminderEnabled,
-                    onCheckedChange = onReminderToggle
+                    onCheckedChange ={ settingsViewModel.toggleReminder()}
                 )
             }
         }
@@ -87,8 +90,6 @@ private fun SettingScreenPreview() {
         SettingsScreen(
             isDarkTheme = false,
             onThemeToggle = { /*TODO*/ },
-            isReminderEnabled = false,
-            onReminderToggle = {},
             onNavigateUp = {}
         )
     }

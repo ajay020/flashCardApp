@@ -10,6 +10,7 @@ import com.example.flashcard.ui.flashcard.FlashcardViewModel
 import com.example.flashcard.ui.home.HomeViewModel
 import com.example.flashcard.ui.mcq.MCQViewModel
 import com.example.flashcard.ui.settings.SettingsViewModel
+import com.example.flashcard.ui.theme.ThemeViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -31,12 +32,6 @@ object AppViewModelProvider {
         }
         initializer {
             MCQViewModel(flashcardApplication().container.flashcardRepository)
-        }
-
-        initializer {
-            SettingsViewModel(
-                flashcardApplication().container.workManagerReminderRepository
-            )
         }
     }
 }

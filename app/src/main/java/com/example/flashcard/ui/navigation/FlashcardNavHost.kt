@@ -159,14 +159,10 @@ fun FlashcardNavHost(
         }
 
         composable(SettingsDestination.route) {
-            val viewModel: SettingsViewModel = viewModel( factory =  AppViewModelProvider.Factory )
-            val isReminderEnabled by viewModel.isReminderEnabled.collectAsState()
 
             SettingsScreen(
                 isDarkTheme = isDarkTheme,
                 onThemeToggle = onThemeToggle,
-                isReminderEnabled = isReminderEnabled, // Replace with your reminder state
-                onReminderToggle = { viewModel.toggleReminder() },
                 onNavigateUp = { navController.popBackStack() },
             )
         }
