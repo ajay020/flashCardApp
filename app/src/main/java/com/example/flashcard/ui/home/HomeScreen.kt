@@ -67,8 +67,6 @@ fun HomeScreen(
     navigateToSettings: () -> Unit,
     onNavigateUp: () -> Unit,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory),
-    isDarkTheme: Boolean,
-    onToggleTheme: () -> Unit
 ) {
     val categoryList by viewModel.categoryListFlow.collectAsState()
     val homeUiState = viewModel.homeUiState
@@ -188,7 +186,8 @@ fun CategoryList(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
-        modifier = modifier.fillMaxWidth(),
+        modifier = modifier
+            .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         items(categoryList) {
@@ -248,7 +247,10 @@ fun CategoryListItem(
             .clickable { onCategoryClick() }
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.surface)
-            .padding(dimensionResource(R.dimen.padding_small)),
+            .padding(
+                horizontal = dimensionResource(id = R.dimen.padding_medium),
+                vertical = dimensionResource(id = R.dimen.padding_small)
+            ),
     ) {
         Row(
             modifier = Modifier

@@ -4,6 +4,7 @@ import AddCardDialog
 import AddCardViewModel
 import CardDetails
 import CardUiState
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -39,17 +40,25 @@ fun AddCardScreen(
     categoryId: Int,
     navigateToMCQ: (Int) -> Unit,
     navigateToFlashcard: (Int) -> Unit,
-    navigateBack: () -> Unit,
     onNavigateUp: () -> Unit,
-    modifier: Modifier = Modifier,
     viewModel: AddCardViewModel = viewModel(factory = AppViewModelProvider.Factory),
     cardListViewModel: CardListViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     val coroutineScope = rememberCoroutineScope()
     val flashcardsUiState by cardListViewModel.cardsUiState.collectAsState()
+    val currentCategory by viewModel.currentCategory.collectAsState()
 
     LaunchedEffect(categoryId) {
         cardListViewModel.setCategoryId(categoryId)
+        viewModel.setCategoryId(categoryId)
+    }
+
+    var title by remember { mutableStateOf("") }
+
+    LaunchedEffect(currentCategory) {
+        currentCategory?.let {
+            title = it.name
+        }
     }
 
     Scaffold(
@@ -57,9 +66,9 @@ fun AddCardScreen(
             .background(Color.Red),
         topBar = {
             MainTopBar(
-                title = stringResource(id = AddCardDestination.titleRes),
+                title = if (title.isEmpty()) "" else title,
                 canNavigateBack = true,
-                showTitle = false,
+                showTitle = true,
                 onNavigateUp = onNavigateUp
             )
         },

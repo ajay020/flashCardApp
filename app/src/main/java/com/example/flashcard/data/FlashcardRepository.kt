@@ -14,7 +14,7 @@ interface FlashcardRepository {
     suspend fun deleteCategory(category: Category)
     fun getAllCategoriesStream(): Flow<List<Category>>
     fun isCategoryNameExists(name: String): Boolean
-    fun getCategoryStream(category: Category): Flow<Category>
+    fun getCategoryStream(categoryId: Int): Flow<Category>
     fun getCategoriesWithFlashcardCount(): Flow<List<CategoryDetails>>
 
     // ================ Flashcard =======================================

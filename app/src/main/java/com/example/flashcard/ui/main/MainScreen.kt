@@ -122,7 +122,8 @@ fun MainTopBar(
                 IconButton(onClick = onNavigateUp) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "back arrow"
+                        contentDescription = "back arrow",
+                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }

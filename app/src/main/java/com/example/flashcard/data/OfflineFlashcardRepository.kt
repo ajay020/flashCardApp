@@ -46,8 +46,8 @@ class OfflineFlashcardRepository (
     override  fun isCategoryNameExists(name:String) = categoryDao.isCategoryNameExists(name)
 
 
-    override fun getCategoryStream(category: Category): Flow<Category> {
-        return categoryDao.getCategoryStream(category.id)
+    override fun getCategoryStream(categoryId: Int): Flow<Category> {
+        return categoryDao.getCategoryStream(categoryId)
     }
 
     override fun getCategoriesWithFlashcardCount(): Flow<List<CategoryDetails>> {

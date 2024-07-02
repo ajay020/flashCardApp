@@ -51,8 +51,6 @@ fun FlashcardNavHost(
         ) {
             HomeScreen(
                 navigateToAddCard = { navController.navigate("${AddCardDestination.route}/$it") },
-                isDarkTheme = isDarkTheme,
-                onToggleTheme = onThemeToggle,
                 navigateToSettings = { navController.navigate(SettingsDestination.route) },
                 onNavigateUp = { navController.navigateUp() },
             )
@@ -68,11 +66,9 @@ fun FlashcardNavHost(
                 backStackEntry.arguments?.getInt(AddCardDestination.CategoryIdArgs) ?: 0
             AddCardScreen(
                 categoryId = categoryId,
-                navigateBack = { navController.navigateUp() },
                 onNavigateUp = { navController.navigateUp() },
                 navigateToMCQ = { navController.navigate("${MCQDestination.route}/$it") },
                 navigateToFlashcard = { navController.navigate("${FlashcardDestination.route}/$it") },
-                modifier = modifier
             )
         }
 
