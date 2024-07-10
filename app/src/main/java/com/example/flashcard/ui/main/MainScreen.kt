@@ -1,5 +1,6 @@
 package com.example.flashcard.ui.main
 
+import android.util.Log
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -47,14 +48,17 @@ import com.example.flashcard.ui.navigation.NavigationDestination
 import com.example.flashcard.ui.profile.ProfileDestination
 import kotlinx.coroutines.launch
 
+
+
 object MainScreenNavigation : NavigationDestination {
     override val route: String = "flashcard"
     override val titleRes: Int = R.string.app_name
 }
 
+val TAG = "MainScreen"
+
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier,
     isDarkTheme: Boolean,
     onThemeToggle: () -> Unit
 ) {
@@ -100,6 +104,7 @@ fun MainTopBar(
     onNavigateUp: () -> Unit = {},
     showTitle: Boolean = false,
     onSettingsClick: () -> Unit = {},
+    showActions: Boolean = false,
     title: String = stringResource(id = R.string.app_name),
 ) {
 
@@ -129,13 +134,16 @@ fun MainTopBar(
             }
         },
         actions = {
-            IconButton(onClick = onSettingsClick) {
-                Icon(
-                    imageVector = Icons.Default.Settings,
-                    contentDescription = "Settings",
-                    tint = MaterialTheme.colorScheme.onPrimary
-                )
+            if (showActions) {
+                IconButton(onClick = onSettingsClick) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Settings",
+                        tint = MaterialTheme.colorScheme.onPrimary
+                    )
+                }
             }
+
         }
     )
 }

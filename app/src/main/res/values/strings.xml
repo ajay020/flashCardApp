@@ -10,4 +10,5 @@
     <string name="settings">settings</string>
     <string name="reminder_title">Practise your cards</string>
     <string name="reminder_text">It\'s time to review your cards!</string>
+    <string name="add">Add</string>
 </resources>

@@ -81,13 +81,14 @@ fun HomeScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Add"
+                    contentDescription = stringResource(R.string.add)
                 )
             }
         },
         topBar = {
             MainTopBar(
                 showTitle = true,
+                showActions = true,
                 title = stringResource(HomeDestination.titleRes),
                 onNavigateUp = onNavigateUp,
                 onSettingsClick = navigateToSettings
