@@ -24,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.flashcard.R
+import com.example.flashcard.ui.theme.FlashCardTheme
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -32,14 +33,14 @@ fun FlashcardTopBar(
     modifier: Modifier = Modifier,
     canClose: Boolean = false,
     onClose: () -> Unit = {},
-    title: String = "",
+    title: String = "Hello",
 ) {
 
     CenterAlignedTopAppBar(
-        modifier = modifier.height(56.dp),
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.Transparent,
-            titleContentColor = Color.Blue
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
         ),
         title = {
             Text(
@@ -53,7 +54,8 @@ fun FlashcardTopBar(
                     Icon(
                         modifier = Modifier.size(32.dp),
                         imageVector = Icons.Filled.Close,
-                        contentDescription = "close"
+                        contentDescription = "close",
+//                        tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -64,7 +66,12 @@ fun FlashcardTopBar(
 @Preview(showBackground = true)
 @Composable
 private fun FlashcardTopBarPreview() {
-    FlashcardTopBar(
-        canClose = true
-    )
+
+    FlashCardTheme (
+        darkTheme = false
+    ){
+        FlashcardTopBar(
+            canClose = true
+        )
+    }
 }

@@ -25,7 +25,6 @@ import com.example.flashcard.ui.theme.FlashCardTheme
 fun CardListHeader(
     onMCQClick: () -> Unit,
     onMatchClick: () -> Unit,
-    onAddCardClick: () -> Unit,
     onFlashcardClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -57,19 +56,6 @@ fun CardListHeader(
         ) {
             Text("Match")
         }
-
-        Spacer(modifier = Modifier.height(18.dp))
-
-        OutlinedButton(
-            modifier = Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(4.dp),
-            onClick = onAddCardClick
-        ) {
-            Text(
-                text ="Add card",
-                style = MaterialTheme.typography.labelLarge
-            )
-        }
     }
 }
 
@@ -82,7 +68,6 @@ private fun CardListHeaderPreview() {
         CardListHeader(
             onMCQClick = {},
             onMatchClick = {},
-            onAddCardClick = {},
             onFlashcardClick = {}
         )
     }

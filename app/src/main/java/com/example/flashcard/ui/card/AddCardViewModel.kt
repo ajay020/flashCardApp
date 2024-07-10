@@ -41,11 +41,13 @@ class AddCardViewModel(
             CardUiState(cardDetails = cardDetails, isEntryValid = validateEntry(cardDetails))
     }
 
-    suspend fun saveCard(categoryId: Int) {
+     fun saveCard(categoryId: Int) {
         if (validateEntry()) {
             cardUiState =
                 cardUiState.copy(cardDetails = cardUiState.cardDetails.copy(categoryId = categoryId))
-            flashcardRepository.insertFlashcard(cardUiState.cardDetails.toCard())
+            viewModelScope.launch {
+                flashcardRepository.insertFlashcard(cardUiState.cardDetails.toCard())
+            }
             resetUiState()
         }
     }
