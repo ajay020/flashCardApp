@@ -1,6 +1,9 @@
 package com.example.flashcard.ui.flashcard
 
-import android.util.Log
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.EaseInOut
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -36,6 +39,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -64,7 +68,6 @@ fun FlashcardScreen(
     val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(categoryId) {
-//        Log.d("FlashcardScreen", "LaunchedEffect triggered with categoryId: $categoryId")
         viewModel.getFlashcardsByCategory(categoryId)
     }
 
@@ -76,11 +79,11 @@ fun FlashcardScreen(
 
     Scaffold(
         topBar = {
-           FlashcardTopBar(
-               canClose = true,
-               title = " ${uiState.currentIndex} /${uiState.flashcards.size}",
-               onClose = onNavigateUp
-           )
+            FlashcardTopBar(
+                canClose = true,
+                title = " ${uiState.currentIndex} /${uiState.flashcards.size}",
+                onClose = onNavigateUp
+            )
         },
     ) { paddingValues ->
 
@@ -150,6 +153,32 @@ fun Flashcard(
     modifier: Modifier = Modifier
 ) {
     var showAnswer by remember { mutableStateOf(false) }
+    val animDuration = 500
+    val zAxisDistance = 50f
+
+    val frontColor by animateColorAsState(
+        targetValue = if (showAnswer)
+            MaterialTheme.colorScheme.surface
+        else
+            MaterialTheme.colorScheme.surface,
+        animationSpec = tween(durationMillis = animDuration, easing = EaseInOut),
+        label = ""
+    )
+
+    val rotateCardY by animateFloatAsState(
+        targetValue = if (showAnswer) 180f else 0f,
+        animationSpec = tween(durationMillis = animDuration, easing = EaseInOut),
+        label = ""
+    )
+
+    val textAlpha by animateFloatAsState(
+        targetValue = if (showAnswer) 0f else 1f,
+        tween(durationMillis = 1500),
+        label = ""
+    )
+
+
+
 
     Column(
         modifier = modifier
@@ -164,13 +193,17 @@ fun Flashcard(
     ) {
         Card(
             modifier = Modifier
+                .graphicsLayer {
+                    rotationY = rotateCardY
+                    cameraDistance = zAxisDistance
+                }
                 .padding(16.dp)
                 .weight(4f)
                 .fillMaxWidth()
                 .clickable { showAnswer = !showAnswer },
             elevation = CardDefaults.cardElevation(8.dp),
             colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.surface
+                containerColor = frontColor
             )
         ) {
             Column(
@@ -183,9 +216,13 @@ fun Flashcard(
             ) {
                 Text(
                     text = if (showAnswer) answer else question,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.graphicsLayer {
+                        alpha = if (showAnswer) 1f - textAlpha else textAlpha
+                        rotationY = if (showAnswer) 180f else 0f
+                    },
                 )
             }
         }
