@@ -60,7 +60,6 @@ object FlashcardDestination : NavigationDestination {
 @Composable
 fun FlashcardScreen(
     categoryId: Int,
-    modifier: Modifier = Modifier,
     viewModel: FlashcardViewModel,
     onNavigateUp: () -> Unit,
     onNavigateToFlashcardResultScreen: () -> Unit = {}
@@ -177,9 +176,6 @@ fun Flashcard(
         label = ""
     )
 
-
-
-
     Column(
         modifier = modifier
             .padding(
@@ -208,7 +204,6 @@ fun Flashcard(
         ) {
             Column(
                 modifier = Modifier
-//                    .background(Color.Red)
                     .fillMaxSize()
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -231,12 +226,16 @@ fun Flashcard(
         Row(
             modifier = Modifier
                 .weight(1f)
-//                .background(Color.Gray)
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            IconButton(onClick = { onIncorrectAnswer() }) {
+            IconButton(
+                onClick = {
+                    onIncorrectAnswer()
+                    showAnswer = false
+                }
+            ) {
                 Icon(
                     imageVector = Icons.Filled.Close,
                     tint = Color.Red,
@@ -248,6 +247,7 @@ fun Flashcard(
             }
             IconButton(onClick = {
                 onCorrectAnswer()
+                showAnswer = false
             }) {
                 Icon(
                     imageVector = Icons.Filled.Check,

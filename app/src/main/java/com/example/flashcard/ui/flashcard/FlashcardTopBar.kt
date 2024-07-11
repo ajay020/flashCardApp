@@ -33,7 +33,7 @@ fun FlashcardTopBar(
     modifier: Modifier = Modifier,
     canClose: Boolean = false,
     onClose: () -> Unit = {},
-    title: String = "Hello",
+    title: String = "",
 ) {
 
     CenterAlignedTopAppBar(

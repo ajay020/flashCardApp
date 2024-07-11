@@ -93,7 +93,6 @@ fun FlashcardNavHost(
                 categoryId = categoryId,
                 viewModel = flashcardViewmodel,
                 onNavigateUp = { navController.navigateUp() },
-                modifier = modifier,
                 onNavigateToFlashcardResultScreen = {
                     navController.navigate(FlashcardResultDestination.route)
                 }
