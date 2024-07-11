@@ -1,12 +1,21 @@
 package com.example.flashcard.model
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "flashcards",
-    indices = [Index(value = ["question"], unique = true)]
+    indices = [Index(value = ["question"], unique = true)],
+    foreignKeys = [
+        ForeignKey(
+            entity = Category::class,
+            parentColumns = ["id"],
+            childColumns = ["categoryId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 data class Flashcard(
     @PrimaryKey(autoGenerate = true)
