@@ -1,10 +1,13 @@
 package com.example.flashcard.ui.home
 
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.calculateEndPadding
@@ -16,9 +19,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.More
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.More
+import androidx.compose.material.icons.outlined.MoreVert
 import androidx.compose.material3.Card
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -49,6 +55,7 @@ import com.example.flashcard.ui.main.MainTopBar
 import com.example.flashcard.R
 import com.example.flashcard.model.Category
 import com.example.flashcard.ui.components.CategoryCreateDialog
+import com.example.flashcard.ui.components.CategoryOptionDialog
 import com.example.flashcard.ui.components.ConfirmDeleteDialog
 import com.example.flashcard.ui.components.EditCategoryDialog
 import com.example.flashcard.ui.main.FlashCardAppPreview
@@ -187,6 +194,8 @@ fun CategoryList(
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
+        contentPadding = PaddingValues(12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
             .fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -203,6 +212,7 @@ fun CategoryList(
 }
 
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun CategoryListItem(
     categoryDetails: CategoryDetails,
@@ -216,6 +226,10 @@ fun CategoryListItem(
     }
 
     var showEditDialog by remember {
+        mutableStateOf(false)
+    }
+
+    var showCategoryOptionDialog by remember {
         mutableStateOf(false)
     }
 
@@ -243,15 +257,29 @@ fun CategoryListItem(
         )
     }
 
+    if (showCategoryOptionDialog) {
+        CategoryOptionDialog(
+            category = categoryDetails,
+            onDismiss = { showCategoryOptionDialog = false },
+            onRename = {
+                showEditDialog = true
+                showCategoryOptionDialog = false
+            },
+            onDelete = {
+                showDialog = true
+                showCategoryOptionDialog = false
+            }
+        )
+    }
+
     Card(
         modifier = Modifier
-            .clickable { onCategoryClick() }
+            .combinedClickable(
+                onClick = { onCategoryClick() },
+                onLongClick = { }
+            )
             .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.surface)
-            .padding(
-                horizontal = dimensionResource(id = R.dimen.padding_medium),
-                vertical = dimensionResource(id = R.dimen.padding_small)
-            ),
+            .background(MaterialTheme.colorScheme.surface),
     ) {
         Row(
             modifier = Modifier
@@ -265,9 +293,11 @@ fun CategoryListItem(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
 
-            Column (
-                modifier = Modifier.weight(1f),
-            ){
+            Column(
+                modifier = Modifier
+                    .padding(start = 4.dp)
+                    .weight(12f),
+            ) {
                 Text(
                     text = categoryDetails.name,
                     style = MaterialTheme.typography.displayMedium,
@@ -281,22 +311,16 @@ fun CategoryListItem(
                 )
             }
 
-            IconButton(onClick = { showEditDialog = true }) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit",
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
             IconButton(
+                modifier =  Modifier
+                    .weight(1f),
                 onClick = {
-                    showDialog = true
+                    showCategoryOptionDialog = true
                 }
             ) {
                 Icon(
-                    imageVector = Icons.Default.Delete,
+                    imageVector = Icons.Outlined.MoreVert,
                     contentDescription = "Delete",
-                    tint = MaterialTheme.colorScheme.error
                 )
             }
         }
@@ -317,7 +341,7 @@ private fun EmptyCategoryMessagePreview() {
 @Preview(showBackground = true)
 @Composable
 private fun CategoryItemPreview() {
-    val category = CategoryDetails(1, "Category 1", flashcardCount = 12)
+    val category = CategoryDetails(1, "Category 1 ", flashcardCount = 12)
 
     FlashCardTheme(
         darkTheme = true
