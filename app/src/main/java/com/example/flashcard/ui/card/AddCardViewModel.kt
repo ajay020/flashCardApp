@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -13,6 +14,8 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+
+val TAG = "AddCardViewModel"
 
 class AddCardViewModel(
     private val flashcardRepository: FlashcardRepository,
@@ -36,12 +39,26 @@ class AddCardViewModel(
         }
     }
 
+    fun deleteCard(flashcard: Flashcard) {
+        viewModelScope.launch {
+            flashcardRepository.deleteFlashcard(flashcard)
+        }
+    }
+
+    fun updateCard(flashcard: Flashcard){
+        if( validateEntry(flashcard.toCardDetails())){
+            viewModelScope.launch {
+                flashcardRepository.updateFlashcard(flashcard)
+            }
+        }
+    }
+
     fun updateUiState(cardDetails: CardDetails) {
         cardUiState =
             CardUiState(cardDetails = cardDetails, isEntryValid = validateEntry(cardDetails))
     }
 
-     fun saveCard(categoryId: Int) {
+    fun saveCard(categoryId: Int) {
         if (validateEntry()) {
             cardUiState =
                 cardUiState.copy(cardDetails = cardUiState.cardDetails.copy(categoryId = categoryId))

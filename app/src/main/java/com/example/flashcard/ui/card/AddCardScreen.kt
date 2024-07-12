@@ -24,6 +24,7 @@ import com.example.flashcard.AppViewModelProvider
 import com.example.flashcard.ui.main.MainTopBar
 import com.example.flashcard.R
 import com.example.flashcard.model.Flashcard
+import com.example.flashcard.ui.components.EmptyMessage
 import com.example.flashcard.ui.navigation.NavigationDestination
 import com.example.flashcard.ui.theme.FlashCardTheme
 import kotlinx.coroutines.launch
@@ -85,17 +86,28 @@ fun AddCardScreen(
             )
         },
     ) { paddingValues ->
-        AddCardContent(
-            modifier = Modifier.padding(
-                start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
-                top = paddingValues.calculateTopPadding(),
-                end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
-            ),
-            flashCardsList = flashcardsUiState.flashcards,
-            onMCQClick = { navigateToMCQ(categoryId) },
-            onMatchClick = { /* Handle Match click */ },
-            onFlashcardClick = { navigateToFlashcard(categoryId) }
-        )
+
+        if (flashcardsUiState.flashcards.isEmpty()) {
+            EmptyMessage(
+                message = "Add a card to get started",
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .fillMaxSize()
+            )
+        } else {
+            AddCardContent(
+                modifier = Modifier.padding(
+                    start = paddingValues.calculateStartPadding(LocalLayoutDirection.current),
+                    top = paddingValues.calculateTopPadding(),
+                    end = paddingValues.calculateEndPadding(LocalLayoutDirection.current),
+                ),
+                flashCardsList = flashcardsUiState.flashcards,
+                onMCQClick = { navigateToMCQ(categoryId) },
+                onFlashcardClick = { navigateToFlashcard(categoryId) },
+                onDeleteFlashcard = { viewModel.deleteCard(it) },
+                onUpdateFlashcard = { viewModel.updateCard(it) }
+            )
+        }
 
         if (showDialog) {
             AddCardDialog(
@@ -115,11 +127,11 @@ fun AddCardScreen(
 fun AddCardContent(
     modifier: Modifier = Modifier,
     flashCardsList: List<Flashcard>,
+    onDeleteFlashcard: (Flashcard) -> Unit,
+    onUpdateFlashcard: (Flashcard) -> Unit,
     onMCQClick: () -> Unit,
-    onMatchClick: () -> Unit,
     onFlashcardClick: () -> Unit,
 ) {
-
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(12.dp),
@@ -130,13 +142,19 @@ fun AddCardContent(
         item {
             CardListHeader(
                 onMCQClick = onMCQClick,
-                onMatchClick = { /*TODO*/ },
                 onFlashcardClick = onFlashcardClick
             )
         }
+        item {
+            Spacer(modifier = Modifier.height(8.dp))
+        }
         // card list items
         items(flashCardsList) { flashcard ->
-            CardItem(flashcard = flashcard)
+            CardItem(
+                flashcard = flashcard,
+                onDelete = onDeleteFlashcard,
+                onUpdate = onUpdateFlashcard
+            )
         }
     }
 }
@@ -170,9 +188,10 @@ private fun AddCardContentPreview() {
     ) {
         AddCardContent(
             flashCardsList = flashcards,
-            onMatchClick = { /* Handle Match click */ },
             onFlashcardClick = { /* Handle Flashcard click */ },
-            onMCQClick = { /* Handle MCQ click */ }
+            onMCQClick = { /* Handle MCQ click */ },
+            onDeleteFlashcard = { /* Handle delete flashcard */ },
+            onUpdateFlashcard = {}
         )
     }
 }

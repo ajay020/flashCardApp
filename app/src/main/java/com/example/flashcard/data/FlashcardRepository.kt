@@ -19,7 +19,7 @@ interface FlashcardRepository {
 
     // ================ Flashcard =======================================
     suspend fun insertFlashcard(flashcard: Flashcard)
-    suspend fun updateFlashcard(flashcard: Flashcard): Boolean
+    suspend fun updateFlashcard(flashcard: Flashcard)
     suspend fun deleteFlashcard(flashcard: Flashcard)
     fun getAllFlashcardsStream(): Flow<List<Flashcard>>
     fun getFlashcardsByCategoryStream(categoryId: Int): Flow<List<Flashcard>>

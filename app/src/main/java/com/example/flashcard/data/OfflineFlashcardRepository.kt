@@ -60,11 +60,12 @@ class OfflineFlashcardRepository (
         flashcardDao.insert(flashcard)
     }
 
-    override suspend fun updateFlashcard(flashcard: Flashcard): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun updateFlashcard(flashcard: Flashcard) {
+            flashcardDao.update(flashcard)
     }
 
     override suspend fun deleteFlashcard(flashcard: Flashcard) {
+        flashcardDao.delete(flashcard)
     }
 
     override fun getAllFlashcardsStream(): Flow<List<Flashcard>> = flashcardDao.getAllFlashcards()

@@ -58,6 +58,7 @@ import com.example.flashcard.ui.components.CategoryCreateDialog
 import com.example.flashcard.ui.components.CategoryOptionDialog
 import com.example.flashcard.ui.components.ConfirmDeleteDialog
 import com.example.flashcard.ui.components.EditCategoryDialog
+import com.example.flashcard.ui.components.EmptyMessage
 import com.example.flashcard.ui.main.FlashCardAppPreview
 import com.example.flashcard.ui.navigation.NavigationDestination
 import com.example.flashcard.ui.theme.FlashCardTheme
@@ -155,7 +156,7 @@ fun HomeScreenContent(
     modifier: Modifier = Modifier
 ) {
     if (categoryList.isEmpty()) {
-        EmptyCategoryMessage(modifier = modifier)
+        EmptyMessage("Add a category to get started", modifier = modifier)
     } else {
         CategoryList(
             modifier = modifier.fillMaxSize(),
@@ -167,23 +168,7 @@ fun HomeScreenContent(
     }
 }
 
-@Composable
-fun EmptyCategoryMessage(modifier: Modifier = Modifier) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(16.dp)
-    ) {
-        Text(
-            text = "Add a Category",
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.displaySmall
-        )
-    }
-}
+
 
 @Composable
 fun CategoryList(
@@ -312,7 +297,7 @@ fun CategoryListItem(
             }
 
             IconButton(
-                modifier =  Modifier
+                modifier = Modifier
                     .weight(1f),
                 onClick = {
                     showCategoryOptionDialog = true
@@ -330,11 +315,11 @@ fun CategoryListItem(
 
 @Preview(showBackground = false)
 @Composable
-private fun EmptyCategoryMessagePreview() {
+private fun EmptyMessagePreview() {
 //    FlashCardTheme(
 //        darkTheme = false
 //    ) {
-//        EmptyCategoryMessage()
+//        EmptyMessage()
 //    }
 }
 
