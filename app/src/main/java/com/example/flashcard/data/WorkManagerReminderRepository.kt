@@ -5,8 +5,8 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.flashcard.REMINDER_WORKER_TAG
-import com.example.flashcard.REMINDER_WORK_NAME
+import com.example.flashcard.utils.REMINDER_WORKER_TAG
+import com.example.flashcard.utils.REMINDER_WORK_NAME
 import com.example.flashcard.workers.ReminderWorker
 import java.util.Calendar
 import java.util.concurrent.TimeUnit

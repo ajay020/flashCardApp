@@ -5,8 +5,7 @@ import android.content.Context
 import androidx.core.app.NotificationCompat
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.flashcard.CHANNEL_ID
-import com.example.flashcard.NOTIFICATION_ID
+import com.example.flashcard.utils.NOTIFICATION_ID
 import com.example.flashcard.R
 
 class ReminderWorker(appContext: Context, workerParams: WorkerParameters) :

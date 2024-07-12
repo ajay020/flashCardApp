@@ -1,20 +1,17 @@
 package com.example.flashcard.workers
 
-import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
-import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.example.flashcard.CHANNEL_ID
-import com.example.flashcard.NOTIFICATION_ID
-import com.example.flashcard.NOTIFICATION_TITLE
+import com.example.flashcard.utils.CHANNEL_ID
+import com.example.flashcard.utils.NOTIFICATION_ID
+import com.example.flashcard.utils.NOTIFICATION_TITLE
 import com.example.flashcard.R
-import com.example.flashcard.VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION
-import com.example.flashcard.VERBOSE_NOTIFICATION_CHANNEL_NAME
+import com.example.flashcard.utils.VERBOSE_NOTIFICATION_CHANNEL_DESCRIPTION
+import com.example.flashcard.utils.VERBOSE_NOTIFICATION_CHANNEL_NAME
 
 private const val TAG = "WorkerUtils"
 
