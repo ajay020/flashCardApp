@@ -12,13 +12,25 @@ Welcome to the Flashcard App! This app allows users to create and manage flashca
 ## Screenshots
 
 ### Home Screen
-![Home Screen](screenshots/home_screen.png)
+![Home Screen](screenshots/Home.png)
 
-### Add Card Screen
-![Add Card Screen](screenshots/add_card_screen.png)
+### Card Details Screen
+![Add Card Screen](screenshots/cardDetails.png)
+
+### Add card Screen
+![Settings Screen](screenshots/addCard.png)
 
 ### Settings Screen
-![Settings Screen](screenshots/settings_screen.png)
+![Settings Screen](screenshots/settings.png)
+
+### Quiz Screen
+![Settings Screen](screenshots/mcq.png)
+
+### Flip card Screen
+![Settings Screen](screenshots/flashCard.png)
+
+### Result Screen
+![Settings Screen](screenshots/result.png)
 
 ## Installation
 
@@ -29,8 +41,4 @@ To get a local copy up and running, follow these simple steps.
 - Android Studio
 - An Android device or emulator
 
-### Installation Steps
 
-1. Clone the repo
-   ```sh
-   git clone https://github.com/your-username/flashcard-app.git
