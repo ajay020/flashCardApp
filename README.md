@@ -11,34 +11,39 @@ Welcome to the Flashcard App! This app allows users to create and manage flashca
 
 ## Screenshots
 
-### Home Screen
-![Home Screen](screenshots/Home.png)
-
-### Card Details Screen
-![Add Card Screen](screenshots/cardDetails.png)
-
-### Add card Screen
-![Settings Screen](screenshots/addCard.png)
-
-### Settings Screen
-![Settings Screen](screenshots/settings.png)
-
-### Quiz Screen
-![Settings Screen](screenshots/mcq.png)
-
-### Flip card Screen
-![Settings Screen](screenshots/flashCard.png)
-
-### Result Screen
-![Settings Screen](screenshots/result.png)
+<table>
+  <tr>
+    <td><img src="screenshots/Home.png" alt="Home Screen" width="200"/></td>
+    <td><img src="screenshots/cardDetails.png" alt="Card Details Screen" width="200"/></td>
+    <td><img src="screenshots/addCard.png" alt="Add Card Screen" width="200"/></td>
+  </tr>
+  <tr>
+    <td>Home Screen</td>
+    <td>Card Details Screen</td>
+    <td>Add Card Screen</td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/settings.png" alt="Settings Screen" width="200"/></td>
+    <td><img src="screenshots/mcq.png" alt="Quiz Screen" width="200"/></td>
+    <td><img src="screenshots/flashCard.png" alt="Flip Card Screen" width="200"/></td>
+  </tr>
+  <tr>
+    <td>Settings Screen</td>
+    <td>Quiz Screen</td>
+    <td>Flip Card Screen</td>
+  </tr>
+  <tr>
+    <td><img src="screenshots/result.png" alt="Result Screen" width="200"/></td>
+  </tr>
+  <tr>
+    <td>Result Screen</td>
+  </tr>
+</table>
 
 ## Installation
 
-To get a local copy up and running, follow these simple steps.
 
 ### Prerequisites
 
 - Android Studio
 - An Android device or emulator
-
-
