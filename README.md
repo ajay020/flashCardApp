@@ -39,11 +39,3 @@ Welcome to the Flashcard App! This app allows users to create and manage flashca
     <td>Result Screen</td>
   </tr>
 </table>
-
-## Installation
-
-
-### Prerequisites
-
-- Android Studio
-- An Android device or emulator
